@@ -1,4 +1,5 @@
 #include "Contact.h"
+#include <iostream>
 
 // !!!
 void Contact::ResolvePenetration() {
@@ -20,74 +21,79 @@ void Contact::ResolvePenetration() {
 
 }
 
-// !!!
-///////////////////////////////////////////////////////////////////////////////
-// Resolves the collision using the impulse method
-///////////////////////////////////////////////////////////////////////////////
+
 void Contact::ResolveCollision() {
-    // //////////////////////////////////////////////////////////////////////////////////
-    // Apply positional correction using the projection method
-    // //////////////////////////////////////////////////////////////////////////////////
-
-    ResolvePenetration();
-
-    // application des forces linéaire
-    /*const float e = std::min(a->restitution, b->restitution);
-    const Vec2 vrel = a->velocity - b->velocity;
-    Vec2 J = normal * (-(1 + e) * vrel.Dot(normal) / (a->invMass + b->invMass));
     
-    a->ApplyImpulse(J);
-    b->ApplyImpulse(-J);*/
+    ///////////////////////////////////////////////////////////////////////////////
+    // Resolves the collision using the impulse method
+    ///////////////////////////////////////////////////////////////////////////////
+    if (a->type == BODY && b->type == BODY) {
+		std::cout << a->shape->GetType() << std::endl;
+        
+        
+        // //////////////////////////////////////////////////////////////////////////////////
+        // Apply positional correction using the projection method
+        // //////////////////////////////////////////////////////////////////////////////////
 
-    // //////////////////////////////////////////////////////////////////////////////////
-    // application des forces avec rotation
-    // //////////////////////////////////////////////////////////////////////////////////
+        ResolvePenetration();
 
-    const float e = std::min(a->restitution, b->restitution);
-    
-    Vec2 ra = end - a->position;
-    Vec2 rb = start - b->position;
-    
-    // comment le point de contact entre a et b bouge vis à vis de la rotation de l'objet et de sa velocity
-    Vec2 va = a->velocity + Vec2(-a->angularVelocity * ra.y, a->angularVelocity * ra.x);
-    Vec2 vb = b->velocity + Vec2(-b->angularVelocity * rb.y, b->angularVelocity * rb.x);
+        // //////////////////////////////////////////////////////////////////////////////////
+        // application des forces avec rotation
+        // //////////////////////////////////////////////////////////////////////////////////
 
-    const Vec2 vRel = va - vb;
+        const float e = std::min(a->restitution, b->restitution);
 
-    const float vRelDotNormal = vRel.Dot(normal);
-    const float impulseMagitudeN = -(1 + e) * vRelDotNormal / ((a->invMass + b->invMass) + 
-    ra.Cross(normal) * ra.Cross(normal) * a->invI + 
-    rb.Cross(normal) * rb.Cross(normal) * b->invI);
+        Vec2 ra = end - a->position;
+        Vec2 rb = start - b->position;
 
-    const Vec2 impulseDirectionN = normal;
+        // comment le point de contact entre a et b bouge vis à vis de la rotation de l'objet et de sa velocity
+        Vec2 va = a->velocity + Vec2(-a->angularVelocity * ra.y, a->angularVelocity * ra.x);
+        Vec2 vb = b->velocity + Vec2(-b->angularVelocity * rb.y, b->angularVelocity * rb.x);
 
-    Vec2 jN = impulseDirectionN * impulseMagitudeN;
+        const Vec2 vRel = va - vb;
 
-    /*a->ApplyImpulse(jN, ra);
-    b->ApplyImpulse(-jN, rb)*/;
+        const float vRelDotNormal = vRel.Dot(normal);
+        const float impulseMagitudeN = -(1 + e) * vRelDotNormal / ((a->invMass + b->invMass) +
+            ra.Cross(normal) * ra.Cross(normal) * a->invI +
+            rb.Cross(normal) * rb.Cross(normal) * b->invI);
 
-    // ///////////////////////////////////////////////////////////////////////////////
-    // appliction des forces avec rotations et frictions
-    // ///////////////////////////////////////////////////////////////////////////////
+        const Vec2 impulseDirectionN = normal;
 
-    const float f = std::min(a->friction, b->friction);
-    Vec2 t = normal.Normal();
+        Vec2 jN = impulseDirectionN * impulseMagitudeN;
 
-    const float vRelDotT = vRel.Dot(t);
-    const float impulseMagitudeT = -(1 + e) * vRelDotT / ((a->invMass + b->invMass) +
-    ra.Cross(t) * ra.Cross(t) * a->invI + 
-    rb.Cross(t) * rb.Cross(t) * b->invI);
+        // ///////////////////////////////////////////////////////////////////////////////
+        // appliction des forces avec rotations et frictions
+        // ///////////////////////////////////////////////////////////////////////////////
 
-    const Vec2 impulseDirectionT = t;
+        const float f = std::min(a->friction, b->friction);
+        Vec2 t = normal.Normal();
 
-    Vec2 jT = impulseDirectionT * impulseMagitudeT * f;
+        const float vRelDotT = vRel.Dot(t);
+        const float impulseMagitudeT = -(1 + e) * vRelDotT / ((a->invMass + b->invMass) +
+            ra.Cross(t) * ra.Cross(t) * a->invI +
+            rb.Cross(t) * rb.Cross(t) * b->invI);
 
-    // jT
+        const Vec2 impulseDirectionT = t;
 
-    a->ApplyImpulse(jN + jT, ra);
-    b->ApplyImpulse(-jN + -jT, rb);
+        Vec2 jT = impulseDirectionT * impulseMagitudeT * f;
 
-    // J = impulse
-    // n = normal
-    // t = tangente
+        // jT
+
+        a->ApplyImpulse(jN + jT, ra);
+        b->ApplyImpulse(-jN + -jT, rb);
+
+        // J = impulse
+        // n = normal
+        // t = tangente
+    }
+    ///////////////////////////////////////////////////////////////////////////////
+	// Resolves the collision using the verlet method
+    ///////////////////////////////////////////////////////////////////////////////
+    else 
+    {
+        VerletBody* vA = (VerletBody*) a;
+        VerletBody* vB = (VerletBody*) b;
+        vA->ApplyImpulse(-normal * depth, Vec2(0, 0), end);
+		vB->ApplyImpulse(normal * depth, Vec2(0, 0), start);
+    }
 }

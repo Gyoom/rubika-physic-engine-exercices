@@ -24,6 +24,7 @@ struct Vec2 {
 
     float Dot(const Vec2& v) const;          // v1.Dot(v2)
     float Cross(const Vec2& v) const;        // v1.Cross(v2)
+    float Dist(const Vec2& v) const;
 
     Vec2& operator = (const Vec2& v);        // v1 = v2
     bool operator == (const Vec2& v) const;  // v1 == v2

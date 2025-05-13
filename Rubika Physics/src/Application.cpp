@@ -30,38 +30,15 @@ void Application::Setup() {
     //world->AddBody(leftWall);
     //world->AddBody(rightWall);
 
-    /*Body* box1 = new Body(CircleShape(50), Graphics::Width() / 2.0, 500, 0.0);
-    box1->rotation = 1.2;
-	world->AddBody(box1);
-    box1 = new Body(BoxShape(150, 150), Graphics::Width() / 2.0, 500, 0.0);
-    world->AddBody(box1);*/
-
-    // Add a static box so other objects can collide
-    Body* bigBox = new Body(BoxShape(200, 200), Graphics::Width() / 2.0, Graphics::Height() / 2.0, 0.0);
-    bigBox->SetTexture("./assets/crate.png");
-    bigBox->restitution = 0.7;
-    bigBox->rotation = 1.4;
-    //world->AddBody(bigBox);
-
-    Body* ball = new Body(BoxShape(60, 60), 800, 200, 0);
-    ball->SetTexture("assets/angrybirds/rock-box.png");
-    ball->restitution = 0.7;
-    world->AddBody(ball);
+	Body* pig1 = new Body(BoxShape(60, 60), 30, 30, 0, false);
+    pig1->SetTexture("assets/angrybirds/pig-2.png");
+    pig1->restitution = 0.7;
+    world->AddBody(pig1);
      
-    Body* pig = new Body(CircleShape(30), 500, 200, 0);
-    pig->SetTexture("assets/angrybirds/wood-box.png");
-    pig->restitution = 0.7;
-    world->AddBody(pig);
-
-    ball = new Body(CircleShape(30), 800, 400, 1.0);
-    ball->SetTexture("assets/angrybirds/bird-red.png");
-    ball->restitution = 0.7;
-    //world->AddBody(ball);
-
-    ball = new Body(CircleShape(600), 800, 1600, 0.0);
-    ball->SetTexture("assets/angrybirds/bird-red.png");
-    ball->restitution = 0.7;
-    //world->AddBody(ball);
+    Body* pig2 = new Body(CircleShape(30), 500, 200, 0, false);
+    pig2->SetTexture("assets/angrybirds/pig-2.png");
+    pig2->restitution = 0.7;
+    world->AddBody(pig2);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -84,7 +61,7 @@ void Application::Input() {
                 if (event.button.button == SDL_BUTTON_LEFT) {
                     int x, y;
                     SDL_GetMouseState(&x, &y);
-                    Body* ball = new Body(CircleShape(30), x, y, 1.0);
+                    Body* ball = new VerletBody(CircleShape(30), x, y, 1, 0.05, false);
                     ball->SetTexture("assets/angrybirds/pig-2.png");
                     ball->restitution = 0.7;
                     world->AddBody(ball);
@@ -92,8 +69,25 @@ void Application::Input() {
                 if (event.button.button == SDL_BUTTON_RIGHT) {
                     int x, y;
                     SDL_GetMouseState(&x, &y);
-                    Body* box = new Body(BoxShape(60, 60), x, y, 1.0);
+
+                    Body* box = new VerletBody(BoxShape(60, 60), x, y, 1.0, 1, false);
                     box->SetTexture("assets/angrybirds/wood-box.png");
+                    box->restitution = 0.05;
+                    world->AddBody(box);
+                }
+                if (event.button.button == SDL_BUTTON_MIDDLE) {
+                    int x, y;
+                    SDL_GetMouseState(&x, &y);
+
+					std::vector<Vec2> localVertices = {
+						Vec2(-50, -50),
+						Vec2(0, -75),
+						Vec2(50, -50),
+						Vec2(50, 50),
+						Vec2(-50, 50)
+					};
+                    Body* box = new VerletBody(PolygonShape(localVertices), x, y, 1.0, 0.05, false);
+                    //box->SetTexture("assets/angrybirds/wood-box.png");
                     box->restitution = 0.05;
                     world->AddBody(box);
                 }
@@ -137,7 +131,7 @@ void Application::Update() {
 // Render function (called several times per second to draw objects)
 ///////////////////////////////////////////////////////////////////////////////
 void Application::Render() {
-    debug = true;
+    debug = false;
     // Draw all bodies
     for (auto body: world->GetBodies()) {
         if (body->shape->GetType() == CIRCLE) {
@@ -145,7 +139,20 @@ void Application::Render() {
             if (!debug && body->texture) {
                 Graphics::DrawTexture(body->position.x, body->position.y, circleShape->radius * 2, circleShape->radius * 2, body->rotation, body->texture);
             } else {
-                Graphics::DrawCircle(body->position.x, body->position.y, circleShape->radius, body->rotation, body->isColliding ?  0xF90B00FF : 0xFF00FF00);
+                if (body->type == VERLET_BODY) {
+                    VerletBody* vBody = (VerletBody*)body;
+
+                    for (Constraint c : vBody->constraints)
+                    {
+                        Graphics::DrawLine(c.p0->pos.x, c.p0->pos.y, c.p1->pos.x, c.p1->pos.y, 0xFF00FF00);
+                    }
+                    for (Point p : vBody->points)
+                    {
+                        Graphics::DrawCircle(p.pos.x, p.pos.y, 10, body->rotation, 0xFF00FF00);
+                    }
+                }
+                else
+                    Graphics::DrawCircle(body->position.x, body->position.y, circleShape->radius, body->rotation, body->isColliding ?  0xF90B00FF : 0xFF00FF00);
             }
         }
         if (body->shape->GetType() == BOX) {
@@ -153,7 +160,22 @@ void Application::Render() {
             if (!debug && body->texture) {
                 Graphics::DrawTexture(body->position.x, body->position.y, boxShape->width, boxShape->height, body->rotation, body->texture);
             } else {
-                Graphics::DrawPolygon(body->position.x, body->position.y, boxShape->worldVertices, body->isColliding ? 0xF90B00FF : 0xFF00FF00);
+                if (body->type == VERLET_BODY) {
+                    VerletBody* vBody = (VerletBody*) body;
+                   
+                    for (Constraint c : vBody->constraints)
+                    {
+                        Graphics::DrawLine(c.p0->pos.x, c.p0->pos.y, c.p1->pos.x, c.p1->pos.y, 0xFF00FF00);
+                    }
+                    for(Point p : vBody->points)
+                    {
+                        Graphics::DrawCircle(p.pos.x, p.pos.y, 10, body->rotation, 0xFF00FF00);
+                    }
+                }
+                else 
+                {
+                    Graphics::DrawPolygon(body->position.x, body->position.y, boxShape->worldVertices, body->isColliding ? 0xF90B00FF : 0xFF00FF00);
+                }
             }
         }
         if (body->shape->GetType() == POLYGON) {
@@ -161,7 +183,22 @@ void Application::Render() {
             if (!debug) {
                 Graphics::DrawFillPolygon(body->position.x, body->position.y, polygonShape->worldVertices, 0xFF444444);
             } else {
-                Graphics::DrawPolygon(body->position.x, body->position.y, polygonShape->worldVertices, body->isColliding ? 0xF90B00FF : 0xFF00FF00);
+                if (body->type == VERLET_BODY) {
+                    VerletBody* vBody = (VerletBody*) body;
+                   
+                    for (Constraint c : vBody->constraints)
+                    {
+                        Graphics::DrawLine(c.p0->pos.x, c.p0->pos.y, c.p1->pos.x, c.p1->pos.y, 0xFF00FF00);
+                    }
+                    for(Point p : vBody->points)
+                    {
+                        Graphics::DrawCircle(p.pos.x, p.pos.y, 10, body->rotation, 0xFF00FF00);
+                    }
+                }
+                else 
+                {
+                    Graphics::DrawPolygon(body->position.x, body->position.y, polygonShape->worldVertices, body->isColliding ? 0xF90B00FF : 0xFF00FF00);
+                }
             }
         }
     }

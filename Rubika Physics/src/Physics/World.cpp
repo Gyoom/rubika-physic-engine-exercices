@@ -56,8 +56,29 @@ void World::Update(float dt) {
     // Update all the bodies in the world (integrating and transforming vertices)
     for (auto body: bodies) {
         body->Update(dt);
+        body->ClearForces();
     }
-
+    for (int i = 0; i < 5; ++i) { // sim_iteration_count
+        for (auto body : bodies) {
+            if (body->type == VERLET_BODY) {
+                VerletBody* vBody = (VerletBody*)body;
+                vBody->handleCollision();
+            }
+        }
+        for (auto body : bodies) {
+            if (body->type == VERLET_BODY) {
+                VerletBody* vBody = (VerletBody*)body;
+                vBody->applyContraints();
+            }
+        }
+    }
+    for (auto body : bodies) {
+        if (body->type == VERLET_BODY) {
+            VerletBody* vBody = (VerletBody*)body;
+			vBody->recalculateCenter();
+            vBody->recalculateVertices();
+        }
+    }
     CheckCollisions();
 }
 

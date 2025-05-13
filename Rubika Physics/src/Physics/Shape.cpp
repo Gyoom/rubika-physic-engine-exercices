@@ -2,6 +2,10 @@
 #include <iostream>
 #include <limits>
 
+////////////////////////////////////////////////////////////////////////////////////////
+// Circles Shapes
+////////////////////////////////////////////////////////////////////////////////////////
+
 CircleShape::CircleShape(float radius) {
     this->radius = radius;
     std::cout << "CircleShape constructor called!" << std::endl;
@@ -28,6 +32,10 @@ float CircleShape::GetMomentOfInertia() const {
     // But this still needs to be multiplied by the rigidbody's mass
     return 0.5 * (radius * radius);
 }
+
+////////////////////////////////////////////////////////////////////////////////////////
+// Polygone Shapes
+////////////////////////////////////////////////////////////////////////////////////////
 
 PolygonShape::PolygonShape(const std::vector<Vec2> vertices) {
     // Initialize the vertices of the polygon shape
@@ -62,7 +70,6 @@ Vec2 PolygonShape::EdgeAt(int index) const {
     return worldVertices[nextVertex] - worldVertices[currVertex];
 }
 
-// !!!
 float PolygonShape::FindMinSeparation(const PolygonShape* other, Vec2& axis, Vec2& point) const {
  
     float separation = std::numeric_limits<float>::lowest();
@@ -111,6 +118,10 @@ void PolygonShape::UpdateVertices(float angle, const Vec2& position) {
     }
 }
 
+////////////////////////////////////////////////////////////////////////////////////////
+// Box Shapes
+////////////////////////////////////////////////////////////////////////////////////////
+
 BoxShape::BoxShape(float width, float height) {
     this->width = width;
     this->height = height;
@@ -144,3 +155,8 @@ float BoxShape::GetMomentOfInertia() const {
     // But this still needs to be multiplied by the rigidbody's mass
     return (0.083333) * (width * width + height * height);
 }
+
+
+
+
+

@@ -19,12 +19,11 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <VCProjectVersion>16.0</VCProjectVersion>
+    <VCProjectVersion>17.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{505822fa-ac4f-4a7f-8cb9-847aa9625ea8}</ProjectGuid>
-    <RootNamespace>RubikaPhysics</RootNamespace>
+    <ProjectGuid>{39cfdf52-483e-472d-b315-530aaeb8bb8c}</ProjectGuid>
+    <RootNamespace>RubikaPhysicsbase</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
-    <ProjectName>Rubika Physics - verlet</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -71,34 +70,16 @@
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <LinkIncremental>true</LinkIncremental>
-    <IncludePath>C:\Users\Admin\Projects\24-25 VS 22\1 - Physics\rubika-physic-engine-exercices\Rubika Physics\lib\SDL2_gfx;C:\SDL2-2.30.5\include;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\SDL2-2.30.5\lib\x86;$(LibraryPath)</LibraryPath>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <LinkIncremental>false</LinkIncremental>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <LinkIncremental>true</LinkIncremental>
-    <IncludePath>C:\Users\Admin\Projects\24-25 VS 22\1 - Physics\rubika-physic-engine-exercices\Rubika Physics\lib\SDL2_gfx;C:\SDL2-2.30.5\include;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\SDL2-2.30.5\lib\x86;$(LibraryPath)</LibraryPath>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <LinkIncremental>false</LinkIncremental>
-  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>SDL2.lib;SDL2_image.lib;SDL2main.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -123,13 +104,10 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>SDL2.lib;SDL2_image.lib;SDL2main.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -149,45 +127,45 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="lib\SDL2_gfx\SDL2_gfxPrimitives.c" />
-    <ClCompile Include="lib\SDL2_gfx\SDL2_imageFilter.c" />
-    <ClCompile Include="lib\SDL2_gfx\SDL2_rotozoom.c" />
-    <ClCompile Include="src\Application.cpp" />
-    <ClCompile Include="src\Graphics.cpp" />
-    <ClCompile Include="src\Main.cpp" />
-    <ClCompile Include="src\Physics\Body.cpp" />
-    <ClCompile Include="src\Physics\CollisionDetection.cpp" />
-    <ClCompile Include="src\Physics\Contact.cpp" />
-    <ClCompile Include="src\Physics\Force.cpp" />
-    <ClCompile Include="src\Physics\MatMN.cpp" />
-    <ClCompile Include="src\Physics\Particle.cpp" />
-    <ClCompile Include="src\Physics\Shape.cpp" />
-    <ClCompile Include="src\Physics\Vec2.cpp" />
-    <ClCompile Include="src\Physics\VecN.cpp" />
-    <ClCompile Include="src\Physics\World.cpp" />
+    <None Include="..\Rubika Physics\SDL2.dll" />
+    <None Include="..\Rubika Physics\SDL2_image.dll" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="lib\SDL2_gfx\SDL2_gfxPrimitives.h" />
-    <ClInclude Include="lib\SDL2_gfx\SDL2_gfxPrimitives_font.h" />
-    <ClInclude Include="lib\SDL2_gfx\SDL2_imageFilter.h" />
-    <ClInclude Include="lib\SDL2_gfx\SDL2_rotozoom.h" />
-    <ClInclude Include="src\Application.h" />
-    <ClInclude Include="src\Graphics.h" />
-    <ClInclude Include="src\Physics\Body.h" />
-    <ClInclude Include="src\Physics\CollisionDetection.h" />
-    <ClInclude Include="src\Physics\Constants.h" />
-    <ClInclude Include="src\Physics\Contact.h" />
-    <ClInclude Include="src\Physics\Force.h" />
-    <ClInclude Include="src\Physics\MatMN.h" />
-    <ClInclude Include="src\Physics\Particle.h" />
-    <ClInclude Include="src\Physics\Shape.h" />
-    <ClInclude Include="src\Physics\Vec2.h" />
-    <ClInclude Include="src\Physics\VecN.h" />
-    <ClInclude Include="src\Physics\World.h" />
+    <ClCompile Include="..\..\Rubika Physics\src\Application.cpp" />
+    <ClCompile Include="..\..\Rubika Physics\src\Graphics.cpp" />
+    <ClCompile Include="..\..\Rubika Physics\src\Main.cpp" />
+    <ClCompile Include="..\..\Rubika Physics\src\Physics\Body.cpp" />
+    <ClCompile Include="..\..\Rubika Physics\src\Physics\CollisionDetection.cpp" />
+    <ClCompile Include="..\..\Rubika Physics\src\Physics\Contact.cpp" />
+    <ClCompile Include="..\..\Rubika Physics\src\Physics\Force.cpp" />
+    <ClCompile Include="..\..\Rubika Physics\src\Physics\MatMN.cpp" />
+    <ClCompile Include="..\..\Rubika Physics\src\Physics\Particle.cpp" />
+    <ClCompile Include="..\..\Rubika Physics\src\Physics\Shape.cpp" />
+    <ClCompile Include="..\..\Rubika Physics\src\Physics\Vec2.cpp" />
+    <ClCompile Include="..\..\Rubika Physics\src\Physics\VecN.cpp" />
+    <ClCompile Include="..\..\Rubika Physics\src\Physics\World.cpp" />
+    <ClCompile Include="..\Rubika Physics\lib\SDL2_gfx\SDL2_gfxPrimitives.c" />
+    <ClCompile Include="..\Rubika Physics\lib\SDL2_gfx\SDL2_imageFilter.c" />
+    <ClCompile Include="..\Rubika Physics\lib\SDL2_gfx\SDL2_rotozoom.c" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="SDL2.dll" />
-    <None Include="SDL2_image.dll" />
+    <ClInclude Include="..\..\Rubika Physics\src\Application.h" />
+    <ClInclude Include="..\..\Rubika Physics\src\Graphics.h" />
+    <ClInclude Include="..\..\Rubika Physics\src\Physics\Body.h" />
+    <ClInclude Include="..\..\Rubika Physics\src\Physics\CollisionDetection.h" />
+    <ClInclude Include="..\..\Rubika Physics\src\Physics\Constants.h" />
+    <ClInclude Include="..\..\Rubika Physics\src\Physics\Contact.h" />
+    <ClInclude Include="..\..\Rubika Physics\src\Physics\Force.h" />
+    <ClInclude Include="..\..\Rubika Physics\src\Physics\MatMN.h" />
+    <ClInclude Include="..\..\Rubika Physics\src\Physics\Particle.h" />
+    <ClInclude Include="..\..\Rubika Physics\src\Physics\Shape.h" />
+    <ClInclude Include="..\..\Rubika Physics\src\Physics\Vec2.h" />
+    <ClInclude Include="..\..\Rubika Physics\src\Physics\VecN.h" />
+    <ClInclude Include="..\..\Rubika Physics\src\Physics\World.h" />
+    <ClInclude Include="..\Rubika Physics\lib\SDL2_gfx\SDL2_gfxPrimitives.h" />
+    <ClInclude Include="..\Rubika Physics\lib\SDL2_gfx\SDL2_gfxPrimitives_font.h" />
+    <ClInclude Include="..\Rubika Physics\lib\SDL2_gfx\SDL2_imageFilter.h" />
+    <ClInclude Include="..\Rubika Physics\lib\SDL2_gfx\SDL2_rotozoom.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

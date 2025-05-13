@@ -1,8 +1,14 @@
 #include "CollisionDetection.h"
 #include "../Graphics.h"
 #include <limits>
+#include <iostream>
 
 bool CollisionDetection::IsColliding(Body* a, Body* b, Contact& contact) {
+
+	if (a->canCollide == false || b->canCollide == false) {
+		return false;
+	}
+
     bool aIsCircle = a->shape->GetType() == CIRCLE;
     bool bIsCircle = b->shape->GetType() == CIRCLE;
     bool aIsPolygon = a->shape->GetType() == POLYGON || a->shape->GetType() == BOX;
@@ -25,7 +31,7 @@ bool CollisionDetection::IsColliding(Body* a, Body* b, Contact& contact) {
 
 // !!!
 bool CollisionDetection::IsCollidingCircleCircle(Body* a, Body* b, Contact& contact) {
-    
+
     CircleShape* aCircleShape = (CircleShape*)a->shape;
     CircleShape* bCircleShape = (CircleShape*)b->shape;
 

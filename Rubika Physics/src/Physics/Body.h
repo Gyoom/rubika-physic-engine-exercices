@@ -6,8 +6,32 @@
 #include "Vec2.h"
 #include "Shape.h"
 
+enum BodyType {
+    BODY,
+	VERLET_BODY,
+};
+
+struct Point {
+    Vec2 pos;
+    Vec2 oldPos;
+    float mass;
+    float pinned;
+    Point(Vec2& pos, float mass, bool pinned);
+};
+
+struct Constraint {
+    Point* p0;
+    Point* p1;
+    float length;
+    float stiffness;
+
+    Constraint(Point* p0, Point* p1, float length, float stiffness);
+    //void Update();
+};
+
 struct Body {
     bool isColliding = false;
+	bool canCollide = true;
 
     // Linear motion
     Vec2 position;
@@ -41,7 +65,10 @@ struct Body {
     // Pointer to an SDL texture
     SDL_Texture* texture = nullptr;
 
-    Body(const Shape& shape, float x, float y, float mass);
+    BodyType type;
+
+    Body() = default;
+    Body(const Shape& shape, float x, float y, float mass, bool canCollide = true);
     ~Body();
 
     bool IsStatic() const;
@@ -59,7 +86,22 @@ struct Body {
     void IntegrateLinear(float dt);
     void IntegrateAngular(float dt);
 
-    void Update(float dt);
+    virtual void Update(float dt);
+};
+
+
+struct VerletBody : public Body {
+    std::vector<Point> points;
+    std::vector<Constraint> constraints;
+    VerletBody(const Shape& shape, float x, float y, float mass, float stiffness, bool pinned);
+    ~VerletBody();
+	void Update(float dt) override;
+    void applyContraints();
+    void handleCollision();
+    bool Contains(const Constraint& c);
+    void recalculateCenter();
+	void ApplyImpulse(const Vec2& j, const Vec2& r, const Vec2& pos);
+    void recalculateVertices();
 };
 
 #endif

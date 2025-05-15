@@ -176,8 +176,8 @@ VerletBody::VerletBody(const Shape& shape, float x, float y, float mass, float s
 
     switch (this->shape->GetType()) {
 	    case CIRCLE: {
-            CircleShape* box = (CircleShape*)shape.Clone();
-            float radius = box->radius;
+            CircleShape* circle = (CircleShape*)shape.Clone();
+            float radius = circle->radius;
             int sideCount = 8;
             int angle = 360 / sideCount;
 

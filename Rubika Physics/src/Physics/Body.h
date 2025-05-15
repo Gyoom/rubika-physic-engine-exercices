@@ -93,6 +93,9 @@ struct Body {
 struct VerletBody : public Body {
     std::vector<Point> points;
     std::vector<Constraint> constraints;
+    float initialRotation;
+
+
     VerletBody(const Shape& shape, float x, float y, float mass, float stiffness, bool pinned);
     ~VerletBody();
 	void Update(float dt) override;

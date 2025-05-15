@@ -9,6 +9,7 @@ class Application {
     private:
         bool debug = false;
         bool running = false;
+        SDL_Texture* bgTexture = nullptr;
         World* world;
 
     public:

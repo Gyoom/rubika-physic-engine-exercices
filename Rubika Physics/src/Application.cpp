@@ -17,28 +17,34 @@ void Application::Setup() {
     // Create a physics world with gravity of -9.8 m/s2
     world = new World(-9.8);
 
-    // Add a floor and walls to contain objects
-    // Body === rigidbody
-    // mass à 0 === no gravity
-    Body* floor = new Body(BoxShape(Graphics::Width() - 50, 50), Graphics::Width() / 2.0, Graphics::Height() - 50, 0.0);
-    Body* leftWall = new Body(BoxShape(50, Graphics::Height() - 100), 50, Graphics::Height() / 2.0 - 25, 0.0);
-    Body* rightWall = new Body(BoxShape(50, Graphics::Height() - 100), Graphics::Width() - 50, Graphics::Height() / 2.0 - 25, 0.0);
-    floor->restitution = 1.0; // absporption d'impact
-    leftWall->restitution = 0.2;
-    rightWall->restitution = 0.2;
-    //world->AddBody(floor);
-    //world->AddBody(leftWall);
-    //world->AddBody(rightWall);
+	// create background texture
+    SDL_Surface* surface = IMG_Load("assets/angrybirds/background.png");
+    if (surface) {
+        bgTexture = SDL_CreateTextureFromSurface(Graphics::renderer, surface);
+        SDL_FreeSurface(surface);
+    }
 
-	Body* pig1 = new Body(BoxShape(60, 60), 30, 30, 0, false);
-    pig1->SetTexture("assets/angrybirds/pig-2.png");
+    /*
+        Body* floor = new Body(BoxShape(Graphics::Width() - 50, 50), Graphics::Width() / 2.0, Graphics::Height() - 50, 0.0);
+        Body* leftWall = new Body(BoxShape(50, Graphics::Height() - 100), 50, Graphics::Height() / 2.0 - 25, 0.0);
+        Body* rightWall = new Body(BoxShape(50, Graphics::Height() - 100), Graphics::Width() - 50, Graphics::Height() / 2.0 - 25, 0.0);
+        floor->restitution = 1.0; // absporption d'impact
+        leftWall->restitution = 0.2;
+        rightWall->restitution = 0.2;
+        world->AddBody(floor);
+        world->AddBody(leftWall);
+        world->AddBody(rightWall);
+    */
+
+	Body* pig1 = new Body(BoxShape(60, 60), 340, 725, 0, false);
+    pig1->SetTexture("assets/angrybirds/bird-red.png");
     pig1->restitution = 0.7;
     world->AddBody(pig1);
      
-    Body* pig2 = new Body(CircleShape(30), 500, 200, 0, false);
+    /*Body* pig2 = new Body(CircleShape(30), 500, 200, 0, false);
     pig2->SetTexture("assets/angrybirds/pig-2.png");
     pig2->restitution = 0.7;
-    world->AddBody(pig2);
+    world->AddBody(pig2);*/
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -92,12 +98,14 @@ void Application::Input() {
                     world->AddBody(box);
                 }
                 break;
-	                case SDL_MOUSEMOTION:
-                        int x, y;
-                        SDL_GetMouseState(&x, &y);
-                        world->GetBodies()[1]->position.x = x;
-                        world->GetBodies()[1]->position.y = y;
-	                    break;
+	        case SDL_MOUSEMOTION:
+                //int x, y;
+                //SDL_GetMouseState(&x, &y);
+                //world->GetBodies()[0]->position.x = x;
+                //world->GetBodies()[0]->position.y = y;
+	            break;
+			default:
+				break;
         }
     }
 }
@@ -132,7 +140,10 @@ void Application::Update() {
 ///////////////////////////////////////////////////////////////////////////////
 void Application::Render() {
     debug = false;
-    // Draw all bodies
+    
+    Graphics::DrawTexture(Graphics::Width() / 2, Graphics::Height() / 2, Graphics::Width(), Graphics::Height(), 0, bgTexture);
+    
+    // Draw all bodies ----------------------------------------------------------------------------------------
     for (auto body: world->GetBodies()) {
         if (body->shape->GetType() == CIRCLE) {
             CircleShape* circleShape = (CircleShape*) body->shape;
@@ -148,7 +159,7 @@ void Application::Render() {
                     }
                     for (Point p : vBody->points)
                     {
-                        Graphics::DrawCircle(p.pos.x, p.pos.y, 10, body->rotation, 0xFF00FF00);
+                        Graphics::DrawCircle(p.pos.x, p.pos.y, 5, body->rotation, 0xFF00FF00);
                     }
                 }
                 else
@@ -169,7 +180,7 @@ void Application::Render() {
                     }
                     for(Point p : vBody->points)
                     {
-                        Graphics::DrawCircle(p.pos.x, p.pos.y, 10, body->rotation, 0xFF00FF00);
+                        Graphics::DrawCircle(p.pos.x, p.pos.y, 5, body->rotation, 0xFF00FF00);
                     }
                 }
                 else 
@@ -192,7 +203,7 @@ void Application::Render() {
                     }
                     for(Point p : vBody->points)
                     {
-                        Graphics::DrawCircle(p.pos.x, p.pos.y, 10, body->rotation, 0xFF00FF00);
+                        Graphics::DrawCircle(p.pos.x, p.pos.y, 5, body->rotation, 0xFF00FF00);
                     }
                 }
                 else 
@@ -202,6 +213,7 @@ void Application::Render() {
             }
         }
     }
+
     Graphics::RenderFrame();
 }
 

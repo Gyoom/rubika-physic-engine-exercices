@@ -82,7 +82,6 @@ void World::Update(float dt) {
     CheckCollisions();
 }
 
-// !!!
 void World::CheckCollisions() { // Narrow type only
     // Check all the bodies with all other bodies detecting collisions
     // !!! ne prend pas en compte si le body est tellement rapide qu'il le traverse entre 2 frames sans jamais lui être superposé -> raycast preview pour gérer ça  
@@ -101,9 +100,9 @@ void World::CheckCollisions() { // Narrow type only
                 a->isColliding = true;
                 b->isColliding = true;
 
-                Graphics::DrawFillCircle(contact.start.x, contact.start.y, 3, 0xFFFF00FF);
-                Graphics::DrawFillCircle(contact.end.x, contact.end.y, 3, 0xFFFFFFFF);
-                Graphics::DrawLine(contact.start.x, contact.start.y, contact.start.x + contact.normal.x * 15, contact.start.y + contact.normal.y * 15, 0xFFFFFFFF);
+                //Graphics::DrawFillCircle(contact.start.x, contact.start.y, 3, 0xFFFF00FF);
+                //Graphics::DrawFillCircle(contact.end.x, contact.end.y, 3, 0xFFFFFFFF);
+                //Graphics::DrawLine(contact.start.x, contact.start.y, contact.start.x + contact.normal.x * 15, contact.start.y + contact.normal.y * 15, 0xFFFFFFFF);
 
             }
         }

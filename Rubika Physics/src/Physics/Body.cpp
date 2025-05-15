@@ -244,6 +244,12 @@ VerletBody::VerletBody(const Shape& shape, float x, float y, float mass, float s
 	    }
     }
 	type = VERLET_BODY;
+
+	float Xd = points[0].pos.x - x;
+	float Yd = points[0].pos.y - y;
+	initialRotation = atan2(Yd, Xd);
+    std::cout << initialRotation << std::endl;
+
 }
 
 VerletBody::~VerletBody()
@@ -255,7 +261,7 @@ VerletBody::~VerletBody()
 
 void VerletBody::Update(float dt)
 {
-	//std::cout << "VerletBody Update called! " << sumForces.x << " : "  << sumForces.y << std::endl;
+	// update points position
     for (Point& p :  points) {
         if (p.pinned)
             continue;
@@ -276,6 +282,10 @@ void VerletBody::Update(float dt)
         p.oldPos.y = p.pos.y;
         p.pos = p.pos + vel;
     }
+
+    // update shape rotation
+	float currentRotation = atan2(points[0].pos.y - position.y, points[0].pos.x - position.x);
+	rotation = currentRotation - initialRotation;
 }
 
 void VerletBody::applyContraints()
@@ -301,24 +311,24 @@ void VerletBody::applyContraints()
 
 void VerletBody::handleCollision()
 {
-    float offset = 100;
+    float offset = 250;
     for (Point& p : points) {
         if (p.pos.y > Graphics::Height() - offset)
         {
             p.pos.y = Graphics::Height() - offset;
         }
-        else if (p.pos.y < offset)
+        else if (p.pos.y < 0)
         {
-            p.pos.y = offset;
+            p.pos.y = 0;
         }
 
-        if (p.pos.x > Graphics::Width() - offset)
+        if (p.pos.x > Graphics::Width())
         {
-            p.pos.x = Graphics::Width() - offset;
+            p.pos.x = Graphics::Width();
         }
-        else if (p.pos.x < offset)
+        else if (p.pos.x < 0)
         {
-            p.pos.x = offset;
+            p.pos.x = 0;
         }
     
     }

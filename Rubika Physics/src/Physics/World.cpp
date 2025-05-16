@@ -6,14 +6,20 @@
 
 World::World(float gravity) {
     G = -gravity;
-    std::cout << "World constructor called!" << std::endl;
 }
 
 World::~World() {
     for (auto body: bodies) {
         delete body;
     }
-    std::cout << "World destructor called!" << std::endl;
+    delete bird;
+	SDL_DestroyTexture(bgTexture);
+    for (auto body : obstacles) {
+        delete body;
+    }
+	for (auto body : pigs) {
+		delete body;
+	}
 }
 
 void World::AddBody(Body* body) {
@@ -32,29 +38,29 @@ void World::AddTorque(float torque) {
     torques.push_back(torque);
 }
 
-void World::Update(float dt) {
-
+void World::ConcreteUpdate(float dt, std::vector<Body*> bodies)
+{
     //this->AddTorque(20.f);
 
-	// Loop all bodies of the world applying forces
-    for (auto body: bodies) {
+    // Loop all bodies of the world applying forces
+    for (auto body : bodies) {
         // Apply the weight force to all bodies
         Vec2 weight = Vec2(0.0, body->mass * G * PIXELS_PER_METER);
         body->AddForce(weight);
 
         // Apply global forces (wind etc.) to all bodies
-        for (auto force: forces) {
+        for (auto force : forces) {
             body->AddForce(force);
         }
 
         // Apply global torque (wind etc.) to all bodies
-        for (auto torque: torques) {
+        for (auto torque : torques) {
             body->AddTorque(torque);
         }
     }
 
     // Update all the bodies in the world (integrating and transforming vertices)
-    for (auto body: bodies) {
+    for (auto body : bodies) {
         body->Update(dt);
         body->ClearForces();
     }
@@ -75,11 +81,18 @@ void World::Update(float dt) {
     for (auto body : bodies) {
         if (body->type == VERLET_BODY) {
             VerletBody* vBody = (VerletBody*)body;
-			vBody->recalculateCenter();
+            vBody->recalculateCenter();
             vBody->recalculateVertices();
         }
     }
     CheckCollisions();
+}
+
+void World::Update(float dt) 
+{
+	ConcreteUpdate(dt, birds);
+	ConcreteUpdate(dt, obstacles);
+    ConcreteUpdate(dt, pigs);
 }
 
 void World::CheckCollisions() { // Narrow type only

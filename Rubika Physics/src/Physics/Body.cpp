@@ -311,7 +311,7 @@ void VerletBody::applyContraints()
 
 void VerletBody::handleCollision()
 {
-    float offset = 250;
+    float offset = Graphics::Height() * 0.2f;
     for (Point& p : points) {
         if (p.pos.y > Graphics::Height() - offset)
         {
@@ -399,6 +399,23 @@ void VerletBody::recalculateVertices()
         }   
 	}
 	
+}
+
+void VerletBody::MoveTo(Vec2 newCenteredPos) {
+    Vec2 movement = newCenteredPos - position;
+
+    for(Point& p : points)
+    {
+        p.pos += movement;
+		p.oldPos += movement;
+    }
+}
+
+void VerletBody::SetPinned(bool value) {
+    for (Point& p : points)
+    {
+        p.pinned = value;
+    }
 }
 
 

@@ -105,6 +105,8 @@ struct VerletBody : public Body {
     void recalculateCenter();
 	void ApplyImpulse(const Vec2& j, const Vec2& r, const Vec2& pos);
     void recalculateVertices();
+    void MoveTo(Vec2 newCenterPos);
+    void SetPinned(bool value);
 };
 
 #endif

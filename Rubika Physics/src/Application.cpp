@@ -4,6 +4,10 @@
 #include "./Physics/CollisionDetection.h"
 #include "./Physics/Contact.h"
 #include <iostream>
+#include <SDL_ttf.h>
+
+
+
 
 bool Application::IsRunning() {
     return running;
@@ -21,32 +25,14 @@ void Application::Setup() {
 	// create background texture
     SDL_Surface* surface = IMG_Load("assets/angrybirds/background.png");
     if (surface) {
-        bgTexture = SDL_CreateTextureFromSurface(Graphics::renderer, surface);
+        world->bgTexture = SDL_CreateTextureFromSurface(Graphics::renderer, surface);
         SDL_FreeSurface(surface);
     }
 
-    /*
-        Body* floor = new Body(BoxShape(Graphics::Width() - 50, 50), Graphics::Width() / 2.0, Graphics::Height() - 50, 0.0);
-        Body* leftWall = new Body(BoxShape(50, Graphics::Height() - 100), 50, Graphics::Height() / 2.0 - 25, 0.0);
-        Body* rightWall = new Body(BoxShape(50, Graphics::Height() - 100), Graphics::Width() - 50, Graphics::Height() / 2.0 - 25, 0.0);
-        floor->restitution = 1.0; // absporption d'impact
-        leftWall->restitution = 0.2;
-        rightWall->restitution = 0.2;
-        world->AddBody(floor);
-        world->AddBody(leftWall);
-        world->AddBody(rightWall);
-    */
-
-	Body* bird1 = new VerletBody(CircleShape(30), 340, 725, 1, 1, true);
-    bird1->SetTexture("assets/angrybirds/bird-red.png");
-    bird1->restitution = 0.7;
-    world->AddBody(bird1);
-	currentBird = bird1;
-     
-    /*Body* pig2 = new Body(CircleShape(30), 500, 200, 0, false);
-    pig2->SetTexture("assets/angrybirds/pig-2.png");
-    pig2->restitution = 0.7;
-    world->AddBody(pig2);*/
+    // bird
+    world->catapultPos = Vec2(Graphics::Width() * 0.175f, Graphics::Height() * 0.6f);
+    world->bird = new Bird(Graphics::Width() * 0.015f, world->catapultPos, "assets/angrybirds/bird-red.png");
+	world->birds.push_back(world->bird->body);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -70,10 +56,10 @@ void Application::Input() {
                     int x, y;
                     SDL_GetMouseState(&x, &y);
 					Vec2 mousePos = Vec2(x, y);
-					if (currentBird) {
-						CircleShape* circleShape = (CircleShape*)currentBird->shape;
-                        if (circleShape && currentBird->position.Dist(mousePos) < circleShape->radius) {
-                            isDragging = true;
+					if (world->bird) {
+						CircleShape* circleShape = (CircleShape*)world->bird->body->shape;
+                        if (circleShape && world->bird->body->position.Dist(mousePos) < circleShape->radius) {
+                            world->bird->isDragging = true;
                         }
 					}
                 }
@@ -86,24 +72,34 @@ void Application::Input() {
                 break;
             case SDL_MOUSEBUTTONUP:
                 if (event.button.button == SDL_BUTTON_LEFT) {
-					if (isDragging && currentBird)
-						isFlying = true;
-                    isDragging = false;
-                  
+                    if (!world->bird)
+                        return;
+
+                    Vec2 stretching = world->catapultPos - world->bird->body->position;
+                    if (stretching.Magnitude() > 1) {
+                        stretching *= world->bird->stretchingMultiplier;
+                        world->bird->body->SetPinned(false);
+                        world->bird->body->AddForce(stretching);
+                        world->bird->isFlying = true;
+                    }
+                    world->bird->isDragging = false;
                 }
                 if (event.button.button == SDL_BUTTON_RIGHT) {
 
                 }
                 if (event.button.button == SDL_BUTTON_MIDDLE) {
-
+                    int x, y;
+                    SDL_GetMouseState(&x, &y);
+                    Body* bird1 = new VerletBody(CircleShape(world->bird->birdSize), x, y, 1, 1, false);
+                    bird1->SetTexture("assets/angrybirds/bird-red.png");
+                    world->AddBody(bird1);
                 }
                 break;
 	        case SDL_MOUSEMOTION:
-				if (isDragging && currentBird) {
+				if (world->bird && world->bird->isDragging) {
 					int x, y;
 					SDL_GetMouseState(&x, &y);
-					currentBird->position.x = x;
-					currentBird->position.y = y;
+                    world->bird->body->MoveTo(Vec2(x, y));
 				}
 	            break;
 			default:
@@ -215,36 +211,35 @@ void Application::RenderBodies() {
         }
     }
 }
-void Application::RenderTrail() {
-    if (!isFlying)
-        return;
 
-}
-void Application::RenderPreview() {
-    if (!currentBird || !isDragging)
-        return;
-
-
-}
 void Application::RenderText() {
-	
+	SDL_Color black = { 0, 0, 0, 255 };
+	TTF_Font* font = TTF_OpenFont("assets/angrybirds/Fonts/angrybirds-regular.ttf", 24);
+    SDL_Surface* surface = TTF_RenderText_Solid(font, "Hello World", black);
+
+    if (surface) {
+        Graphics::DrawTexture(
+            Graphics::Width() / 2, 
+            Graphics::Height() / 2, 
+            Graphics::Width() / 4, 
+            Graphics::Height()/ 4, 
+            0, 
+            SDL_CreateTextureFromSurface(Graphics::renderer, surface)
+        );
+        SDL_FreeSurface(surface);
+    }
 }
 void Application::Render() {
-    debug = false;
-    
-    Graphics::DrawTexture(Graphics::Width() / 2, Graphics::Height() / 2, Graphics::Width(), Graphics::Height(), 0, bgTexture);
+    Graphics::DrawTexture(Graphics::Width() / 2, Graphics::Height() / 2, Graphics::Width(), Graphics::Height(), 0, world->bgTexture);
     
     // Draw all bodies
     RenderBodies();
-    // Render trail
-	RenderTrail();
-	// Render preview
-	RenderPreview();
+    // Render bird trail
+	world->bird->RenderTrail();
+	// Render bird preview
+    world->bird->RenderPreview();
 	// Draw the info
 	RenderText();
-
-
-    
 
     Graphics::RenderFrame();
 }

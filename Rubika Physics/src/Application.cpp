@@ -39,6 +39,10 @@ void Application::Setup() {
 	world->bird->body->entity = world->bird;
     world->AddBody(world->bird->body);
 
+	float woodMass = 1.0f;
+	float stoneMass = 1.0f;
+	float glassMass = 0.5f;
+
     // obstacles row 1
 	Obstacle* obstacle = new Obstacle(new VerletBody(BoxShape(600, 50), Graphics::Width() * 0.8f, Graphics::Height() * 0.779f, 1000, 1, true), "assets/angrybirds/rock-bridge-anchor.png", STONE);
     obstacle->body->entity = obstacle;
@@ -47,169 +51,169 @@ void Application::Setup() {
 
     // obstacles row 2
 
-    obstacle = new Obstacle(new VerletBody(BoxShape(50, 50), Graphics::Width() * 0.68f, Graphics::Height() * 0.737f, 1, 1, false), "assets/angrybirds/wood-box.png", WOOD);
+    obstacle = new Obstacle(new VerletBody(BoxShape(50, 50), Graphics::Width() * 0.68f, Graphics::Height() * 0.737f, woodMass, 1, false), "assets/angrybirds/wood-box.png", WOOD);
     obstacle->body->entity = obstacle;
     world->obstacles.push_back(obstacle);
     world->AddBody(obstacle->body);
 
-    obstacle = new Obstacle(new VerletBody(BoxShape(100, 50), Graphics::Width() * 0.72f, Graphics::Height() * 0.737f, 1, 1, false), "assets/angrybirds/wood-box.png", WOOD);
+    obstacle = new Obstacle(new VerletBody(BoxShape(100, 50), Graphics::Width() * 0.72f, Graphics::Height() * 0.737f, woodMass, 1, false), "assets/angrybirds/wood-box.png", WOOD);
     obstacle->body->entity = obstacle;
     world->obstacles.push_back(obstacle);
     world->AddBody(obstacle->body);
 
-    obstacle = new Obstacle(new VerletBody(BoxShape(50, 50), Graphics::Width() * 0.92f, Graphics::Height() * 0.737f, 1, 1, false), "assets/angrybirds/wood-box.png", WOOD);
+    obstacle = new Obstacle(new VerletBody(BoxShape(50, 50), Graphics::Width() * 0.92f, Graphics::Height() * 0.737f, woodMass, 1, false), "assets/angrybirds/wood-box.png", WOOD);
     obstacle->body->entity = obstacle;
     world->obstacles.push_back(obstacle);
     world->AddBody(obstacle->body);
 
-    obstacle = new Obstacle(new VerletBody(BoxShape(100, 50), Graphics::Width() * 0.88f, Graphics::Height() * 0.737f, 1, 1, false), "assets/angrybirds/wood-box.png", WOOD);
+    obstacle = new Obstacle(new VerletBody(BoxShape(100, 50), Graphics::Width() * 0.88f, Graphics::Height() * 0.737f, woodMass, 1, false), "assets/angrybirds/wood-box.png", WOOD);
     obstacle->body->entity = obstacle;
     world->obstacles.push_back(obstacle);
     world->AddBody(obstacle->body);
 
     // obstacles row 3
 
-    obstacle = new Obstacle(new VerletBody(BoxShape(100, 50), Graphics::Width() * 0.693f, Graphics::Height() * 0.695f, 1, 1, false), "assets/angrybirds/wood-box.png", WOOD);
+    obstacle = new Obstacle(new VerletBody(BoxShape(100, 50), Graphics::Width() * 0.693f, Graphics::Height() * 0.695f, woodMass, 1, false), "assets/angrybirds/wood-box.png", WOOD);
 	obstacle->body->entity = obstacle;
     world->obstacles.push_back(obstacle);
     world->AddBody(obstacle->body);
 
-    obstacle = new Obstacle(new VerletBody(BoxShape(50, 50), Graphics::Width() * 0.733f, Graphics::Height() * 0.695f, 1, 1, false), "assets/angrybirds/wood-box.png", WOOD);
+    obstacle = new Obstacle(new VerletBody(BoxShape(50, 50), Graphics::Width() * 0.733f, Graphics::Height() * 0.695f, woodMass, 1, false), "assets/angrybirds/wood-box.png", WOOD);
     obstacle->body->entity = obstacle;
     world->obstacles.push_back(obstacle);
     world->AddBody(obstacle->body);
 
-    obstacle = new Obstacle(new VerletBody(BoxShape(100, 50), Graphics::Width() * 0.907f, Graphics::Height() * 0.695f, 1, 1, false), "assets/angrybirds/wood-box.png", WOOD);
+    obstacle = new Obstacle(new VerletBody(BoxShape(100, 50), Graphics::Width() * 0.907f, Graphics::Height() * 0.695f, woodMass, 1, false), "assets/angrybirds/wood-box.png", WOOD);
     obstacle->body->entity = obstacle;
     world->obstacles.push_back(obstacle);
     world->AddBody(obstacle->body);
 
-    obstacle = new Obstacle(new VerletBody(BoxShape(50, 50), Graphics::Width() * 0.867f, Graphics::Height() * 0.695f, 1, 1, false), "assets/angrybirds/wood-box.png", WOOD);
+    obstacle = new Obstacle(new VerletBody(BoxShape(50, 50), Graphics::Width() * 0.867f, Graphics::Height() * 0.695f, woodMass, 1, false), "assets/angrybirds/wood-box.png", WOOD);
     obstacle->body->entity = obstacle;
     world->obstacles.push_back(obstacle);
     world->AddBody(obstacle->body);
 
     // obstacles row 4
 
-    obstacle = new Obstacle(new VerletBody(BoxShape(25, 100), Graphics::Width() * 0.68f, Graphics::Height() * 0.634f, 1, 1, false), "assets/angrybirds/wood-box.png", WOOD);
+    obstacle = new Obstacle(new VerletBody(BoxShape(25, 100), Graphics::Width() * 0.68f, Graphics::Height() * 0.634f, woodMass, 1, false), "assets/angrybirds/wood-box.png", WOOD);
     obstacle->body->entity = obstacle;
     world->obstacles.push_back(obstacle);
     world->AddBody(obstacle->body);
 
-    obstacle = new Obstacle(new VerletBody(BoxShape(40, 100), Graphics::Width() * 0.705f, Graphics::Height() * 0.634f, 1, 1, false), "assets/angrybirds/rock-box.png", STONE);
+    obstacle = new Obstacle(new VerletBody(BoxShape(40, 100), Graphics::Width() * 0.705f, Graphics::Height() * 0.634f, stoneMass, 1, false), "assets/angrybirds/rock-box.png", STONE);
     obstacle->body->entity = obstacle;
     world->obstacles.push_back(obstacle);
     world->AddBody(obstacle->body);
 
-    obstacle = new Obstacle(new VerletBody(BoxShape(25, 100), Graphics::Width() * 0.733f, Graphics::Height() * 0.634f, 1, 1, false), "assets/angrybirds/wood-box.png", WOOD);
+    obstacle = new Obstacle(new VerletBody(BoxShape(25, 100), Graphics::Width() * 0.733f, Graphics::Height() * 0.634f, woodMass, 1, false), "assets/angrybirds/wood-box.png", WOOD);
     obstacle->body->entity = obstacle;
     world->obstacles.push_back(obstacle);
     world->AddBody(obstacle->body);
 
 
-    obstacle = new Obstacle(new VerletBody(BoxShape(25, 100), Graphics::Width() * 0.865f, Graphics::Height() * 0.634f, 1, 1, false), "assets/angrybirds/wood-box.png", WOOD);
+    obstacle = new Obstacle(new VerletBody(BoxShape(25, 100), Graphics::Width() * 0.865f, Graphics::Height() * 0.634f, woodMass, 1, false), "assets/angrybirds/wood-box.png", WOOD);
     obstacle->body->entity = obstacle;
     world->obstacles.push_back(obstacle);
     world->AddBody(obstacle->body);
 
-    obstacle = new Obstacle(new VerletBody(BoxShape(40, 100), Graphics::Width() * 0.890f, Graphics::Height() * 0.634f, 1, 1, false), "assets/angrybirds/rock-box.png", STONE);
+    obstacle = new Obstacle(new VerletBody(BoxShape(40, 100), Graphics::Width() * 0.890f, Graphics::Height() * 0.634f, stoneMass, 1, false), "assets/angrybirds/rock-box.png", STONE);
     obstacle->body->entity = obstacle;
     world->obstacles.push_back(obstacle);
     world->AddBody(obstacle->body);
 
-    obstacle = new Obstacle(new VerletBody(BoxShape(25, 100), Graphics::Width() * 0.915f, Graphics::Height() * 0.634f, 1, 1, false), "assets/angrybirds/wood-box.png", WOOD);
+    obstacle = new Obstacle(new VerletBody(BoxShape(25, 100), Graphics::Width() * 0.915f, Graphics::Height() * 0.634f, woodMass, 1, false), "assets/angrybirds/wood-box.png", WOOD);
     obstacle->body->entity = obstacle;
     world->obstacles.push_back(obstacle);
     world->AddBody(obstacle->body);
 
 	// obstacles row 5
 
-    obstacle = new Obstacle(new VerletBody(BoxShape(140, 20), Graphics::Width() * 0.705f, Graphics::Height() * 0.582f, 1, 1, false), "assets/angrybirds/rock-bridge-anchor.png", STONE);
+    obstacle = new Obstacle(new VerletBody(BoxShape(140, 20), Graphics::Width() * 0.705f, Graphics::Height() * 0.582f, stoneMass, 1, false), "assets/angrybirds/rock-bridge-anchor.png", STONE);
     obstacle->body->entity = obstacle;
     world->obstacles.push_back(obstacle);
     world->AddBody(obstacle->body);
 
-    obstacle = new Obstacle(new VerletBody(BoxShape(140, 20), Graphics::Width() * 0.890f, Graphics::Height() * 0.582f, 1, 1, false), "assets/angrybirds/rock-bridge-anchor.png", STONE);
+    obstacle = new Obstacle(new VerletBody(BoxShape(140, 20), Graphics::Width() * 0.890f, Graphics::Height() * 0.582f, stoneMass, 1, false), "assets/angrybirds/rock-bridge-anchor.png", STONE);
     obstacle->body->entity = obstacle;
     world->obstacles.push_back(obstacle);
     world->AddBody(obstacle->body);
 
 	// obstacles row 6
 
-    obstacle = new Obstacle(new VerletBody(BoxShape(40, 40), Graphics::Width() * 0.677f, Graphics::Height() * 0.557f, 1, 1, false), "assets/angrybirds/wood-box.png", WOOD);
+    obstacle = new Obstacle(new VerletBody(BoxShape(40, 40), Graphics::Width() * 0.677f, Graphics::Height() * 0.557f, woodMass, 1, false), "assets/angrybirds/wood-box.png", WOOD);
     obstacle->body->entity = obstacle;
     world->obstacles.push_back(obstacle);
     world->AddBody(obstacle->body);
 
-    obstacle = new Obstacle(new VerletBody(CircleShape(Graphics::Width() * 0.01f), Graphics::Width() * 0.73f, Graphics::Height() * 0.557f, 1, 1, false), "assets/angrybirds/wood-bridge-step.png", WOOD);
+    obstacle = new Obstacle(new VerletBody(CircleShape(Graphics::Width() * 0.01f), Graphics::Width() * 0.73f, Graphics::Height() * 0.557f, woodMass, 1, false), "assets/angrybirds/wood-bridge-step.png", WOOD);
     obstacle->body->entity = obstacle;
     world->obstacles.push_back(obstacle);
     world->AddBody(obstacle->body);
 
-    obstacle = new Obstacle(new VerletBody(BoxShape(300, 20), Graphics::Width() * 0.795f, Graphics::Height() * 0.5326f, 1, 1, false), "assets/angrybirds/wood-plank-cracked.png", WOOD);
+    obstacle = new Obstacle(new VerletBody(BoxShape(300, 20), Graphics::Width() * 0.795f, Graphics::Height() * 0.5326f, woodMass, 1, false), "assets/angrybirds/wood-plank-cracked.png", WOOD);
     obstacle->body->entity = obstacle;
     world->obstacles.push_back(obstacle);
     world->AddBody(obstacle->body);
 
-    obstacle = new Obstacle(new VerletBody(CircleShape(Graphics::Width() * 0.01f), Graphics::Width() * 0.865f, Graphics::Height() * 0.557f, 1, 1, false), "assets/angrybirds/wood-bridge-step.png", WOOD);
+    obstacle = new Obstacle(new VerletBody(CircleShape(Graphics::Width() * 0.01f), Graphics::Width() * 0.865f, Graphics::Height() * 0.557f, woodMass, 1, false), "assets/angrybirds/wood-bridge-step.png", WOOD);
     obstacle->body->entity = obstacle;
     world->obstacles.push_back(obstacle);
     world->AddBody(obstacle->body);
 
-    obstacle = new Obstacle(new VerletBody(BoxShape(40, 40), Graphics::Width() * 0.915f, Graphics::Height() * 0.557f, 1, 1, false), "assets/angrybirds/wood-box.png", WOOD);
+    obstacle = new Obstacle(new VerletBody(BoxShape(40, 40), Graphics::Width() * 0.915f, Graphics::Height() * 0.557f, woodMass, 1, false), "assets/angrybirds/wood-box.png", WOOD);
     obstacle->body->entity = obstacle;
     world->obstacles.push_back(obstacle);
     world->AddBody(obstacle->body);
 
 	// obstacles row 7
 
-    obstacle = new Obstacle(new VerletBody(BoxShape(20, 80), Graphics::Width() * 0.677f, Graphics::Height() * 0.505f, 1, 1, false), "assets/angrybirds/wood-box.png", WOOD);
+    obstacle = new Obstacle(new VerletBody(BoxShape(20, 80), Graphics::Width() * 0.677f, Graphics::Height() * 0.505f, woodMass, 1, false), "assets/angrybirds/wood-box.png", WOOD);
     obstacle->body->entity = obstacle;
     world->obstacles.push_back(obstacle);
     world->AddBody(obstacle->body);
 
-    obstacle = new Obstacle(new VerletBody(BoxShape(20, 80), Graphics::Width() * 0.915f, Graphics::Height() * 0.505f, 1, 1, false), "assets/angrybirds/wood-box.png", WOOD);
+    obstacle = new Obstacle(new VerletBody(BoxShape(20, 80), Graphics::Width() * 0.915f, Graphics::Height() * 0.505f, woodMass, 1, false), "assets/angrybirds/wood-box.png", WOOD);
     obstacle->body->entity = obstacle;
     world->obstacles.push_back(obstacle);
     world->AddBody(obstacle->body);
 
 	// obstacles row 8
 
-    obstacle = new Obstacle(new VerletBody(CircleShape(Graphics::Width() * 0.01f), Graphics::Width() * 0.77f, Graphics::Height() * 0.508f, 1, 1, false), "assets/angrybirds/wood-bridge-step.png", WOOD);
+    obstacle = new Obstacle(new VerletBody(CircleShape(Graphics::Width() * 0.01f), Graphics::Width() * 0.77f, Graphics::Height() * 0.508f, woodMass, 1, false), "assets/angrybirds/wood-bridge-step.png", WOOD);
     obstacle->body->entity = obstacle;
     world->obstacles.push_back(obstacle);
     world->AddBody(obstacle->body);
 
-    obstacle = new Obstacle(new VerletBody(CircleShape(Graphics::Width() * 0.01f), Graphics::Width() * 0.82f, Graphics::Height() * 0.508f, 1, 1, false), "assets/angrybirds/wood-bridge-step.png", WOOD);
+    obstacle = new Obstacle(new VerletBody(CircleShape(Graphics::Width() * 0.01f), Graphics::Width() * 0.82f, Graphics::Height() * 0.508f, woodMass, 1, false), "assets/angrybirds/wood-bridge-step.png", WOOD);
     obstacle->body->entity = obstacle;
     world->obstacles.push_back(obstacle);
     world->AddBody(obstacle->body);
 
-    obstacle = new Obstacle(new VerletBody(BoxShape(140, 20), Graphics::Width() * 0.795f, Graphics::Height() * 0.4835f, 1, 1, false), "assets/angrybirds/rock-bridge-anchor.png", STONE);
+    obstacle = new Obstacle(new VerletBody(BoxShape(140, 20), Graphics::Width() * 0.795f, Graphics::Height() * 0.4835f, stoneMass, 1, false), "assets/angrybirds/rock-bridge-anchor.png", STONE);
     obstacle->body->entity = obstacle;
     world->obstacles.push_back(obstacle);
     world->AddBody(obstacle->body);
 
 	// obstacles row 9
 
-    obstacle = new Obstacle(new VerletBody(BoxShape(20, 100), Graphics::Width() * 0.765f, Graphics::Height() * 0.433f, 1, 1, false), "assets/angrybirds/wood-box.png", WOOD);
+    obstacle = new Obstacle(new VerletBody(BoxShape(20, 100), Graphics::Width() * 0.765f, Graphics::Height() * 0.433f, woodMass, 1, false), "assets/angrybirds/wood-box.png", WOOD);
     obstacle->body->entity = obstacle;
     world->obstacles.push_back(obstacle);
     world->AddBody(obstacle->body);
 
-    obstacle = new Obstacle(new VerletBody(BoxShape(20, 100), Graphics::Width() * 0.825f, Graphics::Height() * 0.433f, 1, 1, false), "assets/angrybirds/wood-box.png", WOOD);
+    obstacle = new Obstacle(new VerletBody(BoxShape(20, 100), Graphics::Width() * 0.825f, Graphics::Height() * 0.433f, woodMass, 1, false), "assets/angrybirds/wood-box.png", WOOD);
     obstacle->body->entity = obstacle;
     world->obstacles.push_back(obstacle);
     world->AddBody(obstacle->body);
 
-    obstacle = new Obstacle(new VerletBody(BoxShape(140, 20), Graphics::Width() * 0.795f, Graphics::Height() * 0.383f, 1, 1, false), "assets/angrybirds/rock-bridge-anchor.png", STONE);
+    obstacle = new Obstacle(new VerletBody(BoxShape(140, 20), Graphics::Width() * 0.795f, Graphics::Height() * 0.383f, stoneMass, 1, false), "assets/angrybirds/rock-bridge-anchor.png", STONE);
     obstacle->body->entity = obstacle;
     world->obstacles.push_back(obstacle);
     world->AddBody(obstacle->body);
 
 	// obstacles row 10
 
-    obstacle = new Obstacle(new VerletBody(BoxShape(50, 120), Graphics::Width() * 0.796f, Graphics::Height() * 0.323f, 1, 1, false), "assets/angrybirds/wood-box.png", WOOD);
+    obstacle = new Obstacle(new VerletBody(BoxShape(50, 120), Graphics::Width() * 0.796f, Graphics::Height() * 0.323f, woodMass, 1, false), "assets/angrybirds/wood-box.png", WOOD);
     obstacle->body->entity = obstacle;
     world->obstacles.push_back(obstacle);
     world->AddBody(obstacle->body);

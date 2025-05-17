@@ -25,6 +25,12 @@ class World {
         int pigCount = 5;
         int pigKilled = 0;
 
+		float obstacleXpigForceMin = 3.f;
+		float birdXstoneForceMin = 10000.f;
+		float birdXwoodForceMin = 10.f;
+		float birdXglassForceMin = 1.f;
+
+
         // entities
         Vec2 catapult;
         Bird* bird;

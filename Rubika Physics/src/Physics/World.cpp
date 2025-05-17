@@ -3,6 +3,7 @@
 #include "CollisionDetection.h"
 #include "../Graphics.h"
 #include <iostream>
+#include "Obstacle.h"
 
 World::World(float gravity) {
     G = -gravity;
@@ -107,7 +108,7 @@ void World::VerletCollisionsEffects(VerletBody* a, VerletBody* b)
 		pigKilled++;
         return;
 	}
-    else if (a->entity->type == PIG && b->entity->type == BIRD) 
+    /*else if (a->entity->type == PIG && b->entity->type == BIRD) 
     {
         pigs.erase(std::remove(pigs.begin(), pigs.end(), a->entity), pigs.end());
         bodies.erase(std::remove(bodies.begin(), bodies.end(), a), bodies.end());
@@ -116,13 +117,13 @@ void World::VerletCollisionsEffects(VerletBody* a, VerletBody* b)
 
         pigKilled++;
 		return;
-    }
+    }*/
 	// Obstacle/Pig collision
 	else if (a->entity->type == OBSTACLE && b->entity->type == PIG) {
 		Vec2 aDir = (a->points[0].pos - a->points[0].oldPos).Normalize();
 		Vec2 bDir = (b->points[0].pos - b->points[0].oldPos).Normalize();
 		float aVelocity = abs(a->points[0].pos.Dist(a->points[0].oldPos));
-		bool bDamaged = aVelocity > 3.f;
+		bool bDamaged = aVelocity > obstacleXpigForceMin;
 
         if (bDamaged && aDir.Dot(bDir) < 0.1f) 
         {
@@ -135,12 +136,12 @@ void World::VerletCollisionsEffects(VerletBody* a, VerletBody* b)
         }
 
 	}
-    else if (a->entity->type == PIG && b->entity->type == OBSTACLE) 
+    /*else if (a->entity->type == PIG && b->entity->type == OBSTACLE) 
     {
         Vec2 aDir = (a->points[0].pos - a->points[0].oldPos).Normalize();
         Vec2 bDir = (b->points[0].pos - b->points[0].oldPos).Normalize();
 		float bVelocity = abs(b->points[0].pos.Dist(b->points[0].oldPos));
-		bool aDamaged = bVelocity > 3.f;
+		bool aDamaged = bVelocity > obstacleXpigForceMin;
 
         if (aDamaged && bDir.Dot(aDir) < 0.1f) 
         {
@@ -151,16 +152,68 @@ void World::VerletCollisionsEffects(VerletBody* a, VerletBody* b)
 			pigKilled++;
 			return;
         }
-    }
+    }*/
 	// Bird/Obstacle collision
     else if (a->entity->type == BIRD && b->entity->type == OBSTACLE) 
     {
-    
-    }
-    else if (a->entity->type == OBSTACLE && b->entity->type == BIRD) 
-    {
+        float forceMin = 100000.f;
+        Obstacle* obst = (Obstacle*)b->entity;
+        if (obst) {
+            if (obst->oType == WOOD) {
+                forceMin = birdXwoodForceMin;
+            }
+            else if (obst->oType == STONE) {
+                forceMin = birdXstoneForceMin;
+            }
+            else if (obst->oType == GLASS) {
+                forceMin = birdXglassForceMin;
+            }
+        }
+     
+        Vec2 aDir = (a->points[0].pos - a->points[0].oldPos).Normalize();
+        Vec2 bDir = (b->points[0].pos - b->points[0].oldPos).Normalize();
+        float aVelocity = abs(a->points[0].pos.Dist(a->points[0].oldPos));
+        bool bDamaged = aVelocity > forceMin;
 
+        if (bDamaged && aDir.Dot(bDir) < 0.1f)
+        {
+            bodies.erase(std::remove(bodies.begin(), bodies.end(), b), bodies.end());
+			obstacles.erase(std::remove(obstacles.begin(), obstacles.end(), b->entity), obstacles.end());
+            delete b->entity;
+            delete b;
+            return;
+        }
     }
+    /*else if (a->entity->type == OBSTACLE && b->entity->type == BIRD) 
+    {
+        float forceMin = 100000.f;
+        Obstacle* obstacle = (Obstacle*)a->entity;
+        if (obstacle->oType == WOOD) {
+            forceMin = birdXwoodForceMin;
+        }
+        else if (obstacle->oType == STONE) {
+            forceMin = birdXstoneForceMin;
+        }
+        else if (obstacle->oType == GLASS) {
+            forceMin = birdXglassForceMin;
+        }
+
+
+        Vec2 aDir = (a->points[0].pos - a->points[0].oldPos).Normalize();
+        Vec2 bDir = (b->points[0].pos - b->points[0].oldPos).Normalize();
+        float bVelocity = abs(b->points[0].pos.Dist(b->points[0].oldPos));
+        bool aDamaged = bVelocity > 3.f;
+
+        if (aDamaged && bDir.Dot(aDir) < 0.1f)
+        {
+            bodies.erase(std::remove(bodies.begin(), bodies.end(), a), bodies.end());
+            pigs.erase(std::remove(pigs.begin(), pigs.end(), a->entity), pigs.end());
+            delete a->entity;
+            delete a;
+            pigKilled++;
+            return;
+        }
+    }*/
 }
 
 void World::CheckCollisions() { // Narrow type only

@@ -1,17 +1,21 @@
 #include "Application.h"
 
 int main(int argc, char *args[]) {
-    Application app;
+    Application app = Application();
 
-    app.Setup();
+    while (app.reload) {
+		app.reload = false;
+        app.Setup();
 
-    while (app.IsRunning()) {
-        app.Input();
-        app.Update();
-        app.Render();
+        while (app.IsRunning()) {
+            app.Input();
+            app.Update();
+            app.Render();
+        }
+
+        app.Destroy();
     }
-
-    app.Destroy();
+    Graphics::CloseWindow();
 
     return 0;
 }

@@ -3,11 +3,10 @@
 #include "./Physics/Force.h"
 #include "./Physics/CollisionDetection.h"
 #include "./Physics/Contact.h"
+#include "./Physics/Pig.h"
 #include <iostream>
 #include <SDL_ttf.h>
-
-
-
+#include <string>
 
 bool Application::IsRunning() {
     return running;
@@ -18,7 +17,12 @@ bool Application::IsRunning() {
 ///////////////////////////////////////////////////////////////////////////////
 void Application::Setup() {
     running = Graphics::OpenWindow();
-
+	debug = false;
+	
+    // Init texting lib 
+    TTF_Init();
+	mainFont = TTF_OpenFont("assets/angrybirds/Fonts/angrybirds-regular.ttf", 300);
+  
     // Create a physics world with gravity of -9.8 m/s2
     world = new World(-9.8);
 
@@ -30,9 +34,214 @@ void Application::Setup() {
     }
 
     // bird
-    world->catapultPos = Vec2(Graphics::Width() * 0.175f, Graphics::Height() * 0.6f);
-    world->bird = new Bird(Graphics::Width() * 0.015f, world->catapultPos, "assets/angrybirds/bird-red.png");
-	world->birds.push_back(world->bird->body);
+    world->catapult = Vec2(Graphics::Width() * 0.175f, Graphics::Height() * 0.6f);
+    world->bird = new Bird(Graphics::Width() * 0.015f, world->catapult, "assets/angrybirds/bird-red.png", world->catapult);
+	world->bird->body->entity = world->bird;
+    world->AddBody(world->bird->body);
+
+    // obstacles row 1
+	Obstacle* obstacle = new Obstacle(new VerletBody(BoxShape(600, 50), Graphics::Width() * 0.8f, Graphics::Height() * 0.779f, 1000, 1, true), "assets/angrybirds/rock-bridge-anchor.png", STONE);
+    obstacle->body->entity = obstacle;
+    world->obstacles.push_back(obstacle);
+	world->AddBody(obstacle->body);
+
+    // obstacles row 2
+
+    obstacle = new Obstacle(new VerletBody(BoxShape(50, 50), Graphics::Width() * 0.68f, Graphics::Height() * 0.737f, 1, 1, false), "assets/angrybirds/wood-box.png", WOOD);
+    obstacle->body->entity = obstacle;
+    world->obstacles.push_back(obstacle);
+    world->AddBody(obstacle->body);
+
+    obstacle = new Obstacle(new VerletBody(BoxShape(100, 50), Graphics::Width() * 0.72f, Graphics::Height() * 0.737f, 1, 1, false), "assets/angrybirds/wood-box.png", WOOD);
+    obstacle->body->entity = obstacle;
+    world->obstacles.push_back(obstacle);
+    world->AddBody(obstacle->body);
+
+    obstacle = new Obstacle(new VerletBody(BoxShape(50, 50), Graphics::Width() * 0.92f, Graphics::Height() * 0.737f, 1, 1, false), "assets/angrybirds/wood-box.png", WOOD);
+    obstacle->body->entity = obstacle;
+    world->obstacles.push_back(obstacle);
+    world->AddBody(obstacle->body);
+
+    obstacle = new Obstacle(new VerletBody(BoxShape(100, 50), Graphics::Width() * 0.88f, Graphics::Height() * 0.737f, 1, 1, false), "assets/angrybirds/wood-box.png", WOOD);
+    obstacle->body->entity = obstacle;
+    world->obstacles.push_back(obstacle);
+    world->AddBody(obstacle->body);
+
+    // obstacles row 3
+
+    obstacle = new Obstacle(new VerletBody(BoxShape(100, 50), Graphics::Width() * 0.693f, Graphics::Height() * 0.695f, 1, 1, false), "assets/angrybirds/wood-box.png", WOOD);
+	obstacle->body->entity = obstacle;
+    world->obstacles.push_back(obstacle);
+    world->AddBody(obstacle->body);
+
+    obstacle = new Obstacle(new VerletBody(BoxShape(50, 50), Graphics::Width() * 0.733f, Graphics::Height() * 0.695f, 1, 1, false), "assets/angrybirds/wood-box.png", WOOD);
+    obstacle->body->entity = obstacle;
+    world->obstacles.push_back(obstacle);
+    world->AddBody(obstacle->body);
+
+    obstacle = new Obstacle(new VerletBody(BoxShape(100, 50), Graphics::Width() * 0.907f, Graphics::Height() * 0.695f, 1, 1, false), "assets/angrybirds/wood-box.png", WOOD);
+    obstacle->body->entity = obstacle;
+    world->obstacles.push_back(obstacle);
+    world->AddBody(obstacle->body);
+
+    obstacle = new Obstacle(new VerletBody(BoxShape(50, 50), Graphics::Width() * 0.867f, Graphics::Height() * 0.695f, 1, 1, false), "assets/angrybirds/wood-box.png", WOOD);
+    obstacle->body->entity = obstacle;
+    world->obstacles.push_back(obstacle);
+    world->AddBody(obstacle->body);
+
+    // obstacles row 4
+
+    obstacle = new Obstacle(new VerletBody(BoxShape(25, 100), Graphics::Width() * 0.68f, Graphics::Height() * 0.634f, 1, 1, false), "assets/angrybirds/wood-box.png", WOOD);
+    obstacle->body->entity = obstacle;
+    world->obstacles.push_back(obstacle);
+    world->AddBody(obstacle->body);
+
+    obstacle = new Obstacle(new VerletBody(BoxShape(40, 100), Graphics::Width() * 0.705f, Graphics::Height() * 0.634f, 1, 1, false), "assets/angrybirds/rock-box.png", STONE);
+    obstacle->body->entity = obstacle;
+    world->obstacles.push_back(obstacle);
+    world->AddBody(obstacle->body);
+
+    obstacle = new Obstacle(new VerletBody(BoxShape(25, 100), Graphics::Width() * 0.733f, Graphics::Height() * 0.634f, 1, 1, false), "assets/angrybirds/wood-box.png", WOOD);
+    obstacle->body->entity = obstacle;
+    world->obstacles.push_back(obstacle);
+    world->AddBody(obstacle->body);
+
+
+    obstacle = new Obstacle(new VerletBody(BoxShape(25, 100), Graphics::Width() * 0.865f, Graphics::Height() * 0.634f, 1, 1, false), "assets/angrybirds/wood-box.png", WOOD);
+    obstacle->body->entity = obstacle;
+    world->obstacles.push_back(obstacle);
+    world->AddBody(obstacle->body);
+
+    obstacle = new Obstacle(new VerletBody(BoxShape(40, 100), Graphics::Width() * 0.890f, Graphics::Height() * 0.634f, 1, 1, false), "assets/angrybirds/rock-box.png", STONE);
+    obstacle->body->entity = obstacle;
+    world->obstacles.push_back(obstacle);
+    world->AddBody(obstacle->body);
+
+    obstacle = new Obstacle(new VerletBody(BoxShape(25, 100), Graphics::Width() * 0.915f, Graphics::Height() * 0.634f, 1, 1, false), "assets/angrybirds/wood-box.png", WOOD);
+    obstacle->body->entity = obstacle;
+    world->obstacles.push_back(obstacle);
+    world->AddBody(obstacle->body);
+
+	// obstacles row 5
+
+    obstacle = new Obstacle(new VerletBody(BoxShape(140, 20), Graphics::Width() * 0.705f, Graphics::Height() * 0.582f, 1, 1, false), "assets/angrybirds/rock-bridge-anchor.png", STONE);
+    obstacle->body->entity = obstacle;
+    world->obstacles.push_back(obstacle);
+    world->AddBody(obstacle->body);
+
+    obstacle = new Obstacle(new VerletBody(BoxShape(140, 20), Graphics::Width() * 0.890f, Graphics::Height() * 0.582f, 1, 1, false), "assets/angrybirds/rock-bridge-anchor.png", STONE);
+    obstacle->body->entity = obstacle;
+    world->obstacles.push_back(obstacle);
+    world->AddBody(obstacle->body);
+
+	// obstacles row 6
+
+    obstacle = new Obstacle(new VerletBody(BoxShape(40, 40), Graphics::Width() * 0.677f, Graphics::Height() * 0.557f, 1, 1, false), "assets/angrybirds/wood-box.png", WOOD);
+    obstacle->body->entity = obstacle;
+    world->obstacles.push_back(obstacle);
+    world->AddBody(obstacle->body);
+
+    obstacle = new Obstacle(new VerletBody(CircleShape(Graphics::Width() * 0.01f), Graphics::Width() * 0.73f, Graphics::Height() * 0.557f, 1, 1, false), "assets/angrybirds/wood-bridge-step.png", WOOD);
+    obstacle->body->entity = obstacle;
+    world->obstacles.push_back(obstacle);
+    world->AddBody(obstacle->body);
+
+    obstacle = new Obstacle(new VerletBody(BoxShape(300, 20), Graphics::Width() * 0.795f, Graphics::Height() * 0.5326f, 1, 1, false), "assets/angrybirds/wood-plank-cracked.png", WOOD);
+    obstacle->body->entity = obstacle;
+    world->obstacles.push_back(obstacle);
+    world->AddBody(obstacle->body);
+
+    obstacle = new Obstacle(new VerletBody(CircleShape(Graphics::Width() * 0.01f), Graphics::Width() * 0.865f, Graphics::Height() * 0.557f, 1, 1, false), "assets/angrybirds/wood-bridge-step.png", WOOD);
+    obstacle->body->entity = obstacle;
+    world->obstacles.push_back(obstacle);
+    world->AddBody(obstacle->body);
+
+    obstacle = new Obstacle(new VerletBody(BoxShape(40, 40), Graphics::Width() * 0.915f, Graphics::Height() * 0.557f, 1, 1, false), "assets/angrybirds/wood-box.png", WOOD);
+    obstacle->body->entity = obstacle;
+    world->obstacles.push_back(obstacle);
+    world->AddBody(obstacle->body);
+
+	// obstacles row 7
+
+    obstacle = new Obstacle(new VerletBody(BoxShape(20, 80), Graphics::Width() * 0.677f, Graphics::Height() * 0.505f, 1, 1, false), "assets/angrybirds/wood-box.png", WOOD);
+    obstacle->body->entity = obstacle;
+    world->obstacles.push_back(obstacle);
+    world->AddBody(obstacle->body);
+
+    obstacle = new Obstacle(new VerletBody(BoxShape(20, 80), Graphics::Width() * 0.915f, Graphics::Height() * 0.505f, 1, 1, false), "assets/angrybirds/wood-box.png", WOOD);
+    obstacle->body->entity = obstacle;
+    world->obstacles.push_back(obstacle);
+    world->AddBody(obstacle->body);
+
+	// obstacles row 8
+
+    obstacle = new Obstacle(new VerletBody(CircleShape(Graphics::Width() * 0.01f), Graphics::Width() * 0.77f, Graphics::Height() * 0.508f, 1, 1, false), "assets/angrybirds/wood-bridge-step.png", WOOD);
+    obstacle->body->entity = obstacle;
+    world->obstacles.push_back(obstacle);
+    world->AddBody(obstacle->body);
+
+    obstacle = new Obstacle(new VerletBody(CircleShape(Graphics::Width() * 0.01f), Graphics::Width() * 0.82f, Graphics::Height() * 0.508f, 1, 1, false), "assets/angrybirds/wood-bridge-step.png", WOOD);
+    obstacle->body->entity = obstacle;
+    world->obstacles.push_back(obstacle);
+    world->AddBody(obstacle->body);
+
+    obstacle = new Obstacle(new VerletBody(BoxShape(140, 20), Graphics::Width() * 0.795f, Graphics::Height() * 0.4835f, 1, 1, false), "assets/angrybirds/rock-bridge-anchor.png", STONE);
+    obstacle->body->entity = obstacle;
+    world->obstacles.push_back(obstacle);
+    world->AddBody(obstacle->body);
+
+	// obstacles row 9
+
+    obstacle = new Obstacle(new VerletBody(BoxShape(20, 100), Graphics::Width() * 0.765f, Graphics::Height() * 0.433f, 1, 1, false), "assets/angrybirds/wood-box.png", WOOD);
+    obstacle->body->entity = obstacle;
+    world->obstacles.push_back(obstacle);
+    world->AddBody(obstacle->body);
+
+    obstacle = new Obstacle(new VerletBody(BoxShape(20, 100), Graphics::Width() * 0.825f, Graphics::Height() * 0.433f, 1, 1, false), "assets/angrybirds/wood-box.png", WOOD);
+    obstacle->body->entity = obstacle;
+    world->obstacles.push_back(obstacle);
+    world->AddBody(obstacle->body);
+
+    obstacle = new Obstacle(new VerletBody(BoxShape(140, 20), Graphics::Width() * 0.795f, Graphics::Height() * 0.383f, 1, 1, false), "assets/angrybirds/rock-bridge-anchor.png", STONE);
+    obstacle->body->entity = obstacle;
+    world->obstacles.push_back(obstacle);
+    world->AddBody(obstacle->body);
+
+	// obstacles row 10
+
+    obstacle = new Obstacle(new VerletBody(BoxShape(50, 120), Graphics::Width() * 0.796f, Graphics::Height() * 0.323f, 1, 1, false), "assets/angrybirds/wood-box.png", WOOD);
+    obstacle->body->entity = obstacle;
+    world->obstacles.push_back(obstacle);
+    world->AddBody(obstacle->body);
+
+
+    // pigs
+    Pig* pig = new Pig(Graphics::Width() * 0.02f, Vec2(Graphics::Width() * 0.8f, Graphics::Height() * 0.725f), "assets/angrybirds/pig-1.png");
+	pig->body->entity = pig;
+    world->pigs.push_back(pig);
+    world->AddBody(pig->body);
+
+    pig = new Pig(Graphics::Width() * 0.01f, Vec2(Graphics::Width() * 0.77f, Graphics::Height() * 0.744f), "assets/angrybirds/pig-1.png");
+    pig->body->entity = pig;
+    world->pigs.push_back(pig);
+    world->AddBody(pig->body);
+
+    pig = new Pig(Graphics::Width() * 0.01f, Vec2(Graphics::Width() * 0.7f, Graphics::Height() * 0.557f), "assets/angrybirds/pig-1.png");
+    pig->body->entity = pig;
+    world->pigs.push_back(pig);
+    world->AddBody(pig->body);
+
+    pig = new Pig(Graphics::Width() * 0.01f, Vec2(Graphics::Width() * 0.89f, Graphics::Height() * 0.557f), "assets/angrybirds/pig-1.png");
+    pig->body->entity = pig;
+    world->pigs.push_back(pig);
+    world->AddBody(pig->body);
+
+    pig = new Pig(Graphics::Width() * 0.015f, Vec2(Graphics::Width() * 0.795f, Graphics::Height() * 0.45f), "assets/angrybirds/pig-1.png");
+    pig->body->entity = pig;
+    world->pigs.push_back(pig);
+    world->AddBody(pig->body);
+	
+
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -50,13 +259,17 @@ void Application::Input() {
                     running = false;
                 if (event.key.keysym.sym == SDLK_d)
                     debug = !debug;
+                if (event.key.keysym.sym == SDLK_r) {
+					reload = true;
+                    running = false;
+                }
                 break;
             case SDL_MOUSEBUTTONDOWN:
                 if (event.button.button == SDL_BUTTON_LEFT) {
                     int x, y;
                     SDL_GetMouseState(&x, &y);
 					Vec2 mousePos = Vec2(x, y);
-					if (world->bird) {
+					if (world->bird && !world->bird->isFlying) {
 						CircleShape* circleShape = (CircleShape*)world->bird->body->shape;
                         if (circleShape && world->bird->body->position.Dist(mousePos) < circleShape->radius) {
                             world->bird->isDragging = true;
@@ -72,10 +285,10 @@ void Application::Input() {
                 break;
             case SDL_MOUSEBUTTONUP:
                 if (event.button.button == SDL_BUTTON_LEFT) {
-                    if (!world->bird)
+                    if (!world->bird || world->bird->isFlying)
                         return;
 
-                    Vec2 stretching = world->catapultPos - world->bird->body->position;
+                    Vec2 stretching = world->catapult - world->bird->body->position;
                     if (stretching.Magnitude() > 1) {
                         stretching *= world->bird->stretchingMultiplier;
                         world->bird->body->SetPinned(false);
@@ -99,7 +312,14 @@ void Application::Input() {
 				if (world->bird && world->bird->isDragging) {
 					int x, y;
 					SDL_GetMouseState(&x, &y);
-                    world->bird->body->MoveTo(Vec2(x, y));
+					Vec2 mousePos = Vec2(x, y);
+					Vec2 currentStretching = mousePos - world->catapult;
+                    if (currentStretching.Magnitude() > world->bird->maxStretching) {
+                        currentStretching = currentStretching.Normalize();
+						currentStretching *= world->bird->maxStretching;
+						mousePos = world->catapult + currentStretching;
+                    }
+                    world->bird->body->MoveTo(mousePos);
 				}
 	            break;
 			default:
@@ -213,31 +433,131 @@ void Application::RenderBodies() {
 }
 
 void Application::RenderText() {
-	SDL_Color black = { 0, 0, 0, 255 };
-	TTF_Font* font = TTF_OpenFont("assets/angrybirds/Fonts/angrybirds-regular.ttf", 24);
-    SDL_Surface* surface = TTF_RenderText_Solid(font, "Hello World", black);
-
+    std::string text = "Verlet Angry Birds";
+    SDL_Surface* surface = TTF_RenderText_Solid(mainFont, text.c_str(), black);
+    SDL_Texture* texture = nullptr;
+    // Title
     if (surface) {
-        Graphics::DrawTexture(
-            Graphics::Width() / 2, 
-            Graphics::Height() / 2, 
-            Graphics::Width() / 4, 
-            Graphics::Height()/ 4, 
-            0, 
-            SDL_CreateTextureFromSurface(Graphics::renderer, surface)
-        );
+        texture = SDL_CreateTextureFromSurface(Graphics::renderer, surface);
         SDL_FreeSurface(surface);
+        Graphics::DrawTexture(
+            Graphics::Width() * 0.2,
+            Graphics::Height() * 0.1,
+            Graphics::Width() * 0.365,
+            Graphics::Height() * 0.16666,
+            0,
+            texture
+        );
+        SDL_DestroyTexture(texture);
+	}
+	// Birds count
+	text = std::to_string(world->birdMax - world->birdThrow) + "/" + std::to_string(world->birdMax);
+    surface = TTF_RenderText_Solid(mainFont, text.c_str(), Red);
+    if (surface) {
+        texture = SDL_CreateTextureFromSurface(Graphics::renderer, surface);
+        SDL_FreeSurface(surface);
+        Graphics::DrawTexture(
+            Graphics::Width() * 0.05,
+            Graphics::Height() * 0.9,
+            Graphics::Width() * 0.052,
+            Graphics::Height() * 0.083,
+            0,
+            texture
+        );
+        SDL_DestroyTexture(texture);
     }
+	// Pigs count
+    text = std::to_string(world->pigCount - world->pigKilled) + "/" + std::to_string(world->pigCount);
+    surface = TTF_RenderText_Solid(mainFont, text.c_str(), Green);
+    if (surface) {
+        texture = SDL_CreateTextureFromSurface(Graphics::renderer, surface);
+        SDL_FreeSurface(surface);
+        Graphics::DrawTexture(
+            Graphics::Width() * 0.2,
+            Graphics::Height() * 0.9,
+            Graphics::Width() * 0.052,
+            Graphics::Height() * 0.083,
+            0,
+            texture
+        );
+        SDL_DestroyTexture(texture);
+        
+    }
+	bool isGameOver = false;
+    // Win
+    if (world->pigCount == world->pigKilled) 
+    {
+		isGameOver = true;
+        text = "You Win!";
+        surface = TTF_RenderText_Solid(mainFont, text.c_str(), Green);
+        if (surface) {
+            texture = SDL_CreateTextureFromSurface(Graphics::renderer, surface);
+            SDL_FreeSurface(surface);
+            Graphics::DrawTexture(
+                Graphics::Width() * 0.5,
+                Graphics::Height() * 0.5,
+                Graphics::Width() * 0.2,
+                Graphics::Height() * 0.1,
+                0,
+                texture
+            );
+            SDL_DestroyTexture(texture);
+        }
+	}
+    // Lose
+	else if (world->birdThrow >= world->birdMax) 
+    {
+		isGameOver = true;
+		text = "You Lose!";
+		surface = TTF_RenderText_Solid(mainFont, text.c_str(), Red);
+		if (surface) {
+			texture = SDL_CreateTextureFromSurface(Graphics::renderer, surface);
+			SDL_FreeSurface(surface);
+			Graphics::DrawTexture(
+				Graphics::Width() * 0.5,
+				Graphics::Height() * 0.5,
+				Graphics::Width() * 0.2,
+				Graphics::Height() * 0.1,
+				0,
+				texture
+			);
+			SDL_DestroyTexture(texture);
+		}
+	}
+    // Reload Game
+    if (isGameOver) {
+		text = "Press R to reload";
+		surface = TTF_RenderText_Solid(mainFont, text.c_str(), black);
+		if (surface) {
+			texture = SDL_CreateTextureFromSurface(Graphics::renderer, surface);
+			SDL_FreeSurface(surface);
+			Graphics::DrawTexture(
+				Graphics::Width() * 0.5,
+				Graphics::Height() * 0.6,
+				Graphics::Width() * 0.1,
+				Graphics::Height() * 0.05,
+				0,
+				texture
+			);
+			SDL_DestroyTexture(texture);
+		}
+    }
+
 }
+
 void Application::Render() {
     Graphics::DrawTexture(Graphics::Width() / 2, Graphics::Height() / 2, Graphics::Width(), Graphics::Height(), 0, world->bgTexture);
     
+	// Draw the catapult back
+	world->bird->RenderStretching(true);
     // Draw all bodies
     RenderBodies();
     // Render bird trail
 	world->bird->RenderTrail();
 	// Render bird preview
     world->bird->RenderPreview();
+	// Draw the catapult front
+    world->bird->RenderStretching(false);
 	// Draw the info
 	RenderText();
 
@@ -249,5 +569,5 @@ void Application::Render() {
 ///////////////////////////////////////////////////////////////////////////////
 void Application::Destroy() {
     delete world;
-    Graphics::CloseWindow();
+	delete mainFont;
 }

@@ -73,8 +73,8 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>D:\source\repos\VS\rubika-physic-engine-exercices\Rubika Physics\lib\freetype;D:\source\repos\VS\rubika-physic-engine-exercices\Rubika Physics\lib\SDL2_gfx;C:\SDL2-2.30.5\include;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\SDL2-2.30.5\lib\x86;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(ProjectDir)\lib\SDL2_gfx;$(ProjectDir)\lib\freetype;$(ProjectDir)\lib\SDL2;$(IncludePath)</IncludePath>
+    <LibraryPath>$(ProjectDir)\lib\freetypeLib;$(ProjectDir)\lib\SDL2Lib\x86;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
@@ -160,9 +160,12 @@
     <ClCompile Include="src\Physics\Body.cpp" />
     <ClCompile Include="src\Physics\CollisionDetection.cpp" />
     <ClCompile Include="src\Physics\Contact.cpp" />
+    <ClCompile Include="src\Physics\Entity.cpp" />
     <ClCompile Include="src\Physics\Force.cpp" />
     <ClCompile Include="src\Physics\MatMN.cpp" />
+    <ClCompile Include="src\Physics\Obstacle.cpp" />
     <ClCompile Include="src\Physics\Particle.cpp" />
+    <ClCompile Include="src\Physics\Pig.cpp" />
     <ClCompile Include="src\Physics\Shape.cpp" />
     <ClCompile Include="src\Physics\Vec2.cpp" />
     <ClCompile Include="src\Physics\VecN.cpp" />
@@ -181,9 +184,12 @@
     <ClInclude Include="src\Physics\CollisionDetection.h" />
     <ClInclude Include="src\Physics\Constants.h" />
     <ClInclude Include="src\Physics\Contact.h" />
+    <ClInclude Include="src\Physics\Entity.h" />
     <ClInclude Include="src\Physics\Force.h" />
     <ClInclude Include="src\Physics\MatMN.h" />
+    <ClInclude Include="src\Physics\Obstacle.h" />
     <ClInclude Include="src\Physics\Particle.h" />
+    <ClInclude Include="src\Physics\Pig.h" />
     <ClInclude Include="src\Physics\Shape.h" />
     <ClInclude Include="src\Physics\Vec2.h" />
     <ClInclude Include="src\Physics\VecN.h" />

@@ -6,6 +6,8 @@
 #include "Vec2.h"
 #include "Shape.h"
 
+class Entity;
+
 enum BodyType {
     BODY,
 	VERLET_BODY,
@@ -94,7 +96,9 @@ struct VerletBody : public Body {
     std::vector<Point> points;
     std::vector<Constraint> constraints;
     float initialRotation;
-
+	float stiffness;
+	float updateLimiter = 0.13f;
+	Entity* entity = nullptr;
 
     VerletBody(const Shape& shape, float x, float y, float mass, float stiffness, bool pinned);
     ~VerletBody();

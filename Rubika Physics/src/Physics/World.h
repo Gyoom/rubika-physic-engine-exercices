@@ -3,6 +3,8 @@
 
 #include "./Body.h"
 #include "./Bird.h"
+#include "./Pig.h"
+#include "./Obstacle.h"
 #include <vector>
 
 class World {
@@ -19,15 +21,15 @@ class World {
         SDL_Texture* bgTexture = nullptr;
         // stats
         int birdMax = 3;
-        int birdCount = 0;
+        int birdThrow = 0;
         int pigCount = 5;
-        Vec2 catapultPos;
+        int pigKilled = 0;
 
         // entities
+        Vec2 catapult;
         Bird* bird;
-		std::vector<Body*> birds;
-        std::vector<Body*> obstacles;
-        std::vector<Body*> pigs;
+        std::vector<Obstacle*> obstacles;
+        std::vector<Pig*> pigs;
 
         World(float gravity);
         ~World();
@@ -38,9 +40,10 @@ class World {
         void AddForce(const Vec2& force);
         void AddTorque(float torque);
 
+		void bodiesUpdate(float dt);
         void Update(float dt);
-        void ConcreteUpdate(float dt, std::vector<Body*> bodies);
 
+		void VerletCollisionsEffects(VerletBody* a, VerletBody* b);
         void CheckCollisions();
 };
 

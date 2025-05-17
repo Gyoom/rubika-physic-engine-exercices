@@ -38,11 +38,10 @@ void World::AddTorque(float torque) {
     torques.push_back(torque);
 }
 
-void World::ConcreteUpdate(float dt, std::vector<Body*> bodies)
-{
+void World::bodiesUpdate(float dt) {
     //this->AddTorque(20.f);
 
-    // Loop all bodies of the world applying forces
+   // Loop all bodies of the world applying forces
     for (auto body : bodies) {
         // Apply the weight force to all bodies
         Vec2 weight = Vec2(0.0, body->mass * G * PIXELS_PER_METER);
@@ -60,6 +59,7 @@ void World::ConcreteUpdate(float dt, std::vector<Body*> bodies)
     }
 
     // Update all the bodies in the world (integrating and transforming vertices)
+
     for (auto body : bodies) {
         body->Update(dt);
         body->ClearForces();
@@ -90,9 +90,77 @@ void World::ConcreteUpdate(float dt, std::vector<Body*> bodies)
 
 void World::Update(float dt) 
 {
-	ConcreteUpdate(dt, birds);
-	ConcreteUpdate(dt, obstacles);
-    ConcreteUpdate(dt, pigs);
+	World::bodiesUpdate(dt);
+	bird->Update(dt, this);
+}
+
+void World::VerletCollisionsEffects(VerletBody* a, VerletBody* b)
+{
+	// Bird/Pig collision
+    if (a->entity->type == BIRD && b->entity->type == PIG) 
+    {
+        pigs.erase(std::remove(pigs.begin(), pigs.end(), b->entity), pigs.end());
+        bodies.erase(std::remove(bodies.begin(), bodies.end(), b), bodies.end());
+        delete b->entity;
+        delete b;
+
+		pigKilled++;
+        return;
+	}
+    else if (a->entity->type == PIG && b->entity->type == BIRD) 
+    {
+        pigs.erase(std::remove(pigs.begin(), pigs.end(), a->entity), pigs.end());
+        bodies.erase(std::remove(bodies.begin(), bodies.end(), a), bodies.end());
+        delete a->entity;
+        delete a;
+
+        pigKilled++;
+		return;
+    }
+	// Obstacle/Pig collision
+	else if (a->entity->type == OBSTACLE && b->entity->type == PIG) {
+		Vec2 aDir = (a->points[0].pos - a->points[0].oldPos).Normalize();
+		Vec2 bDir = (b->points[0].pos - b->points[0].oldPos).Normalize();
+		float aVelocity = abs(a->points[0].pos.Dist(a->points[0].oldPos));
+		bool bDamaged = aVelocity > 3.f;
+
+        if (bDamaged && aDir.Dot(bDir) < 0.1f) 
+        {
+			bodies.erase(std::remove(bodies.begin(), bodies.end(), b), bodies.end());
+		    pigs.erase(std::remove(pigs.begin(), pigs.end(), b->entity), pigs.end());
+			delete b->entity;
+			delete b;
+            pigKilled++;
+			return;
+        }
+
+	}
+    else if (a->entity->type == PIG && b->entity->type == OBSTACLE) 
+    {
+        Vec2 aDir = (a->points[0].pos - a->points[0].oldPos).Normalize();
+        Vec2 bDir = (b->points[0].pos - b->points[0].oldPos).Normalize();
+		float bVelocity = abs(b->points[0].pos.Dist(b->points[0].oldPos));
+		bool aDamaged = bVelocity > 3.f;
+
+        if (aDamaged && bDir.Dot(aDir) < 0.1f) 
+        {
+			bodies.erase(std::remove(bodies.begin(), bodies.end(), a), bodies.end());
+			pigs.erase(std::remove(pigs.begin(), pigs.end(), a->entity), pigs.end());
+			delete a->entity;
+			delete a;
+			pigKilled++;
+			return;
+        }
+    }
+	// Bird/Obstacle collision
+    else if (a->entity->type == BIRD && b->entity->type == OBSTACLE) 
+    {
+    
+    }
+    else if (a->entity->type == OBSTACLE && b->entity->type == BIRD) 
+    {
+
+    }
 }
 
 void World::CheckCollisions() { // Narrow type only
@@ -117,6 +185,11 @@ void World::CheckCollisions() { // Narrow type only
                 //Graphics::DrawFillCircle(contact.end.x, contact.end.y, 3, 0xFFFFFFFF);
                 //Graphics::DrawLine(contact.start.x, contact.start.y, contact.start.x + contact.normal.x * 15, contact.start.y + contact.normal.y * 15, 0xFFFFFFFF);
 
+				VerletBody* vBodyA = (VerletBody*)a;
+				VerletBody* vBodyB = (VerletBody*)b;
+
+                if (vBodyA && vBodyB) 
+					World::VerletCollisionsEffects(vBodyA, vBodyB);
             }
         }
     }

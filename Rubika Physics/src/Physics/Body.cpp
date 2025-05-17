@@ -36,6 +36,7 @@ Body::Body(const Shape& shape, float x, float y, float mass, bool canCollide) {
 
 Body::~Body() {
     delete shape;
+	shape = nullptr;
     SDL_DestroyTexture(texture);
     std::cout << "Body destructor called!" << std::endl;
 }
@@ -160,6 +161,7 @@ VerletBody::VerletBody(const Shape& shape, float x, float y, float mass, float s
     this->restitution = 1.0;
     this->friction = 0.7;
     this->mass = mass;
+	this->stiffness = stiffness;
     if (mass != 0.0) {
         this->invMass = 1.0 / mass;
     }
@@ -255,6 +257,7 @@ VerletBody::VerletBody(const Shape& shape, float x, float y, float mass, float s
 VerletBody::~VerletBody()
 {
 	delete shape;
+	shape = nullptr;
 	SDL_DestroyTexture(texture);
 	std::cout << "VerletBody destructor called!" << std::endl;
 }
@@ -278,9 +281,12 @@ void VerletBody::Update(float dt)
         vel += acc;
 
         // 4. Integrate pos
-        p.oldPos.x = p.pos.x;
-        p.oldPos.y = p.pos.y;
-        p.pos = p.pos + vel;
+        if (vel.Magnitude() > updateLimiter)
+        {
+            p.oldPos.x = p.pos.x;
+            p.oldPos.y = p.pos.y;
+            p.pos = p.pos + vel;
+        }
     }
 
     // update shape rotation

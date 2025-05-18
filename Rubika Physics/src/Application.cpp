@@ -16,8 +16,7 @@ bool Application::IsRunning() {
 // Setup function (executed once in the beginning of the simulation)
 ///////////////////////////////////////////////////////////////////////////////
 void Application::Setup() {
-    running = Graphics::OpenWindow();
-	debug = false;
+    running = Graphics::OpenWindow(1920, 1200);
 	
     // Init texting lib 
     TTF_Init();
@@ -145,7 +144,7 @@ void Application::Setup() {
     world->obstacles.push_back(obstacle);
     world->AddBody(obstacle->body);
 
-    obstacle = new Obstacle(new VerletBody(CircleShape(Graphics::Width() * 0.01f), Graphics::Width() * 0.73f, Graphics::Height() * 0.557f, glassMass, 1, false), "assets/angrybirds/glass-box.png", GLASS);
+    obstacle = new Obstacle(new VerletBody(CircleShape(Graphics::Width() * 0.01f), Graphics::Width() * 0.73f, Graphics::Height() * 0.557f, glassMass, 1, false), "assets/angrybirds/wood-bridge-step.png", WOOD);
     obstacle->body->entity = obstacle;
     world->obstacles.push_back(obstacle);
     world->AddBody(obstacle->body);
@@ -155,7 +154,7 @@ void Application::Setup() {
     world->obstacles.push_back(obstacle);
     world->AddBody(obstacle->body);
 
-    obstacle = new Obstacle(new VerletBody(CircleShape(Graphics::Width() * 0.01f), Graphics::Width() * 0.865f, Graphics::Height() * 0.557f, glassMass, 1, false), "assets/angrybirds/glass-box.png", GLASS);
+    obstacle = new Obstacle(new VerletBody(CircleShape(Graphics::Width() * 0.01f), Graphics::Width() * 0.865f, Graphics::Height() * 0.557f, glassMass, 1, false), "assets/angrybirds/wood-bridge-step.png", WOOD);
     obstacle->body->entity = obstacle;
     world->obstacles.push_back(obstacle);
     world->AddBody(obstacle->body);

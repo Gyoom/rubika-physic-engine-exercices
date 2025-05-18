@@ -36,6 +36,28 @@ bool Graphics::OpenWindow() {
     return true;
 }
 
+bool Graphics::OpenWindow(float width, float height) {
+    if (SDL_Init(SDL_INIT_EVERYTHING) != 0) {
+        std::cerr << "Error initializing SDL" << std::endl;
+        return false;
+    }
+    SDL_DisplayMode display_mode;
+    SDL_GetCurrentDisplayMode(0, &display_mode);
+    windowWidth = width;
+	windowHeight = height;
+    window = SDL_CreateWindow(NULL, 0, 0, windowWidth, windowHeight, SDL_WINDOW_BORDERLESS);
+    if (!window) {
+        std::cerr << "Error creating SDL window" << std::endl;
+        return false;
+    }
+    renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+    if (!renderer) {
+        std::cerr << "Error creating SDL renderer" << std::endl;
+        return false;
+    }
+    return true;
+}
+
 void Graphics::ClearScreen(Uint32 color) {
     SDL_SetRenderDrawColor(renderer, color >> 16, color >> 8, color, 255);
     SDL_RenderClear(renderer);

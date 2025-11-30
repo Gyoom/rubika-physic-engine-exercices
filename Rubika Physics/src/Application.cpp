@@ -7,6 +7,7 @@
 #include <iostream>
 #include <SDL_ttf.h>
 #include <string>
+#include <SDL_image.h>
 
 bool Application::IsRunning() {
     return running;

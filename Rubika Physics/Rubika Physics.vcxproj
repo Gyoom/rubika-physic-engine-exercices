@@ -73,16 +73,16 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(ProjectDir)\lib\SDL2_gfx;$(ProjectDir)\lib\freetype;$(ProjectDir)\lib\SDL2;$(IncludePath)</IncludePath>
-    <LibraryPath>$(ProjectDir)\lib\freetypeLib;$(ProjectDir)\lib\SDL2Lib\x86;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);.\lib\SDL2;.\lib\SDL2_gfx;.\lib\freetype</IncludePath>
+    <LibraryPath>$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86);.\lib\SDL2Lib\x86;.\lib\freetypeLib</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>C:\Users\Admin\Projects\24-25 VS 22\1 - Physics\rubika-physic-engine-exercices\Rubika Physics\lib\SDL2_gfx;C:\SDL2-2.30.5\include;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\SDL2-2.30.5\lib\x86;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);.\lib\SDL2;.\lib\SDL2_gfx;.\lib\freetype</IncludePath>
+    <LibraryPath>$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86);.\lib\SDL2Lib\x86;.\lib\freetypeLib</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
